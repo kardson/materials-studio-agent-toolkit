@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ms-agent-toolkit"
+version = "0.1.0"
+description = "Portable local Materials Studio agent toolkit"
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.0",
+  "jinja2>=3.1",
+]
+
+[project.scripts]
+run_materialscript = "tools.ms_agent_toolkit.commands.run_materialscript:main"
+prepare_gui_submission_package = "tools.ms_agent_toolkit.commands.prepare_gui_submission_package:main"
+read_module_result = "tools.ms_agent_toolkit.commands.read_module_result:main"
+publish_to_project_documents = "tools.ms_agent_toolkit.commands.publish_to_project_documents:main"
+
+[tool.setuptools]
+packages = [
+  "tools",
+  "tools.ms_bridge",
+  "tools.ms_bridge.scripts",
+  "tools.ms_agent_toolkit",
+]

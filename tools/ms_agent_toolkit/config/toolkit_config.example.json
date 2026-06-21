@@ -1,0 +1,6 @@
+{
+  "capabilityRegistryPath": "C:\\Users\\kards\\Documents\\DFT_materials_studio_mcp_m1\\tools\\ms_agent_toolkit\\capabilities",
+  "templatesRoot": "C:\\Users\\kards\\Documents\\DFT_materials_studio_mcp_m1\\tools\\ms_agent_toolkit\\templates",
+  "knowledgeRoot": "C:\\Users\\kards\\Documents\\DFT_materials_studio_mcp_m1\\tools\\ms_agent_toolkit\\knowledge",
+  "experimentalAuditRoot": "C:\\Users\\kards\\Documents\\DFT_materials_studio_mcp_m1\\tools\\ms_agent_toolkit\\workspace\\experimental"
+}
