@@ -1,0 +1,1 @@
+Cannot redirect stdout at C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\etc\Gateway\root_default\dsd\commands/DSD_serverutils.pm line 609.

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+
+tools/gui_loop_queue/
+tools/ms_bridge/workspace/
+
+*.out
+*MatStudioLog.htm
+
+tools/gateway_agent_bridge/gui_*_log.txt
+tools/gateway_agent_bridge/gui_context_probe_output.txt
+tools/gateway_agent_bridge/probe_*_job_result.json
+
+00_admin/
+docs/

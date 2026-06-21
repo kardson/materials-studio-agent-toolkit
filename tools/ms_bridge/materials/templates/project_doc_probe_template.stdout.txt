@@ -1,0 +1,39 @@
+Instructions for using RunMatScript scripts
+===========================================
+
+NAME
+
+   RunMatScript.sh or RunMatScript.bat
+
+DESCRIPTION
+   RunMatScript script runs a MaterialsScript Perl script as a standalone program
+   in serial or parallel mode. RunMatScript.sh is provided for LINUX servers,
+   while RunMatScript.bat is provided for Windows servers.
+
+   Typical usage:
+       RunMatScript.sh [-h] [-q <queue name>] [-np <number of cores>] [-project] <scriptname>  -- [ scriptarguments ... ] (UNIX)
+   or
+       RunMatScript [-h] [-q <queue name>] [-np <number of cores>] [-project] <scriptname>  -- [ scriptarguments ... ] (Windows)
+
+RUN OPTIONS
+
+     -h              - displays the help text
+
+     -np             - run in parallel on "number of cores"
+
+     -project        - run script within a Materials Studio project,
+                       which is either opened or created.
+                       E.g. if script is called test.pl, the project name is test.stp
+
+     -q <queue name> - submit the job to the required queue. Gateway
+                       has to be configured to use this queuing system.
+ARGUMENTS
+
+     <scriptname>    - name of the MaterialsScript file.
+                       E.g. if script is called test.pl, <scriptname> = test
+
+     scriptarguments - any arguments to be processed by MaterialsScript itself via standard Perl mechanism. 
+     example: 
+	RunMatScript -np 4 -project test -- ../../BN.xsd
+	Will execute script "test.pl" with a Perl input argument "../../BN.xsd" in parallel on 4 cores. 
+        If the project "test.stp" does not exist it will be created.

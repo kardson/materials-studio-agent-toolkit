@@ -1,0 +1,8 @@
+{
+  "materialsStudioInstallRoot": "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1",
+  "runMatScriptBat": "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\etc\\Scripting\\bin\\RunMatScript.bat",
+  "workspaceRoot": "C:\\Users\\kards\\Documents\\DFT\\tools\\ms_bridge\\workspace",
+  "defaultProjectDocumentsRoot": "C:\\Users\\kards\\Documents\\Materials Studio Projects",
+  "productionResultMode": "gui_project_tree",
+  "defaultTimeoutSeconds": 1800
+}

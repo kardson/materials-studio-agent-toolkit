@@ -1,0 +1,4 @@
+task : SinglePoint
+dipole_correction : SELFCONSISTENT
+dipole_dir : Z
+cut_off_energy : 353.700000000000000 eV

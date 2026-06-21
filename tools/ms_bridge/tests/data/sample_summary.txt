@@ -1,0 +1,3 @@
+CASTEP Energy finished for S1_v2_GaAs100_6L_2x2_clean_fixed2L_init_v2 as CASTEP_S1_V2_5A_defaultcut_energy_v3
+Task: SinglePoint
+TotalEnergy: -138926.3720371
