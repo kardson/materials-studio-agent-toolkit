@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "manifestPath": "C:/tmp/task_manifest.json",
+  "runResultPath": "C:/tmp/run_result.json",
+  "publishedPath": "C:/target/file.xsd",
+  "nativeLogPath": "C:/tmp/publish.htm"
+}

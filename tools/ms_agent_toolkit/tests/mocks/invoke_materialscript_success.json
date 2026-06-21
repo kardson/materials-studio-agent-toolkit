@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "exitCode": 0,
+  "timedOut": false,
+  "nativeStdoutPath": "C:/tmp/job.pl.out",
+  "nativeLogPath": "C:/tmp/jobMatStudioLog.htm",
+  "nativeStdout": "submitted\n",
+  "nativeLog": "",
+  "nativeFailed": false
+}
