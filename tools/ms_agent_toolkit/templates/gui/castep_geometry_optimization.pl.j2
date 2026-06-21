@@ -1,0 +1,25 @@
+use strict;
+use warnings;
+use MaterialsScript qw(:all);
+
+my $target_name = '{{ input_xsd }}';
+my $result_name = '{{ result_name|default("CASTEP_geometry_optimization_result.xsd") }}';
+my $settings_name = '{{ settings_name|default("CASTEP_geometry_optimization_settings") }}';
+my $doc = $Documents{$target_name};
+die "Document not found in current project: $target_name\n" unless $doc;
+
+my $working_doc = $doc->SaveAs($result_name);
+
+Modules->CASTEP->ChangeSettings(Settings(
+    Quality => '{{ quality|default("Coarse") }}',
+    PropertiesKPointQuality => '{{ properties_kpoint_quality|default("Coarse") }}',
+    DipoleCorrection => '{{ dipole_correction|default("Self-consistent") }}'
+));
+
+Modules->CASTEP->SaveSettings($settings_name);
+my $results = Modules->CASTEP->GeometryOptimization->Run($working_doc, Settings(
+    Quality => '{{ quality|default("Coarse") }}',
+    PropertiesKPointQuality => '{{ properties_kpoint_quality|default("Coarse") }}',
+    DipoleCorrection => '{{ dipole_correction|default("Self-consistent") }}'
+));
+print "submitted\n";
