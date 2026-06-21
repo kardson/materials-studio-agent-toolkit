@@ -1,0 +1,18 @@
+{
+  "capability_id": "castep.energy",
+  "module": "CASTEP",
+  "task": "Energy",
+  "official_api_signature": "Modules->CASTEP->Energy->Run(<system>, <settings>)",
+  "official_doc_refs": [
+    "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\share\\doc\\content\\scripting\\castepscripting\\apicasteprunenergy.htm"
+  ],
+  "official_example_refs": [
+    "C:\\Users\\kards\\Documents\\DFT_materials_studio_mcp_m1\\tools\\ms_bridge\\materials\\templates\\submit_castep_template.pl"
+  ],
+  "template_id": "castep.energy.basic",
+  "allowed_parameters": ["input_xsd", "quality"],
+  "required_inputs": ["input_xsd"],
+  "result_reader": "castep",
+  "supported_execution_modes": ["compliant"],
+  "notes": "First-release standalone CASTEP energy capability."
+}

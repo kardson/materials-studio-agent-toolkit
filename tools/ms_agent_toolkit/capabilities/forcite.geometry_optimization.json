@@ -1,0 +1,6 @@
+{
+  "capability_id": "forcite.geometry_optimization",
+  "status": "reserved",
+  "supported_execution_modes": [],
+  "notes": "Not implemented in first release."
+}
