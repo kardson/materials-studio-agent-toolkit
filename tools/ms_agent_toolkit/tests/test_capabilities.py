@@ -5,21 +5,37 @@ from tools.ms_agent_toolkit.capabilities import CapabilityRegistry
 
 
 class CapabilityRegistryTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.registry = CapabilityRegistry(Path(__file__).resolve().parent.parent / "capabilities")
+
     def test_registry_loads_castep_energy_card(self) -> None:
-        registry = CapabilityRegistry(
-            Path(r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\capabilities")
-        )
-        card = registry.get("castep.energy")
+        card = self.registry.get("castep.energy")
         self.assertEqual(card["capability_id"], "castep.energy")
         self.assertEqual(card["module"], "CASTEP")
         self.assertEqual(card["result_reader"], "castep")
         self.assertEqual(card["supported_execution_modes"], ["compliant"])
 
-    def test_registry_reports_reserved_capability(self) -> None:
-        registry = CapabilityRegistry(
-            Path(r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\capabilities")
+    def test_registry_loads_castep_geometry_optimization_card(self) -> None:
+        card = self.registry.get("castep.geometry_optimization")
+        self.assertEqual(card["capability_id"], "castep.geometry_optimization")
+        self.assertEqual(card["module"], "CASTEP")
+        self.assertEqual(card["task"], "GeometryOptimization")
+        self.assertEqual(card["result_reader"], "castep")
+
+    def test_registry_lists_all_capability_ids(self) -> None:
+        cards = self.registry.list_all()
+        capability_ids = {card["capability_id"] for card in cards}
+        self.assertEqual(
+            capability_ids,
+            {
+                "castep.energy",
+                "castep.geometry_optimization",
+                "forcite.geometry_optimization",
+            },
         )
-        card = registry.get("forcite.geometry_optimization")
+
+    def test_registry_reports_reserved_capability(self) -> None:
+        card = self.registry.get("forcite.geometry_optimization")
         self.assertEqual(card["status"], "reserved")
 
 
