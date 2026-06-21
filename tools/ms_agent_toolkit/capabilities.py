@@ -6,10 +6,12 @@ from pathlib import Path
 
 class CapabilityRegistry:
     def __init__(self, root: Path) -> None:
-        self.root = Path(root)
+        self.root = Path(root).resolve()
 
     def get(self, capability_id: str) -> dict:
-        path = self.root / f"{capability_id}.json"
+        path = (self.root / f"{capability_id}.json").resolve()
+        if self.root not in path.parents:
+            raise ValueError("Capability id escapes registry root")
         return json.loads(path.read_text(encoding="utf-8"))
 
     def list_all(self) -> list[dict]:

@@ -34,6 +34,10 @@ class CapabilityRegistryTests(unittest.TestCase):
             },
         )
 
+    def test_registry_rejects_capability_path_escape_attempt(self) -> None:
+        with self.assertRaises(ValueError):
+            self.registry.get("..\\outside")
+
     def test_registry_reports_reserved_capability(self) -> None:
         card = self.registry.get("forcite.geometry_optimization")
         self.assertEqual(card["status"], "reserved")
