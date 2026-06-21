@@ -6,8 +6,11 @@ from tools.ms_agent_toolkit.templates import render_template
 
 class RenderTemplateTests(unittest.TestCase):
     def test_render_template_applies_defaults_for_optional_parameters(self) -> None:
-        template_path = Path(
-            r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\templates\standalone\castep_energy.pl.j2"
+        template_path = (
+            Path(__file__).resolve().parents[1]
+            / "templates"
+            / "standalone"
+            / "castep_energy.pl.j2"
         )
         rendered = render_template(
             template_path=template_path,
