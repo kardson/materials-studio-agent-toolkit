@@ -14,6 +14,10 @@ class CapabilityRegistryTests(unittest.TestCase):
         self.assertEqual(card["module"], "CASTEP")
         self.assertEqual(card["result_reader"], "castep")
         self.assertEqual(card["supported_execution_modes"], ["compliant"])
+        self.assertEqual(
+            card["official_example_refs"],
+            ["tools/ms_bridge/materials/templates/submit_castep_template.pl"],
+        )
 
     def test_registry_loads_castep_geometry_optimization_card(self) -> None:
         card = self.registry.get("castep.geometry_optimization")
@@ -21,6 +25,10 @@ class CapabilityRegistryTests(unittest.TestCase):
         self.assertEqual(card["module"], "CASTEP")
         self.assertEqual(card["task"], "GeometryOptimization")
         self.assertEqual(card["result_reader"], "castep")
+        self.assertEqual(
+            card["official_example_refs"],
+            ["tools/gateway_agent_bridge/perl/gui_castep_go_s1_v2_5b.pl"],
+        )
 
     def test_registry_lists_all_capability_ids(self) -> None:
         cards = self.registry.list_all()

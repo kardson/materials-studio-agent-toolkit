@@ -7,7 +7,7 @@
     "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\share\\doc\\content\\scripting\\castepscripting\\apicasteprungeometryoptimization.htm"
   ],
   "official_example_refs": [
-    "C:\\Users\\kards\\Documents\\DFT_materials_studio_mcp_m1\\tools\\gateway_agent_bridge\\perl\\gui_castep_go_s1_v2_5b.pl"
+    "tools/gateway_agent_bridge/perl/gui_castep_go_s1_v2_5b.pl"
   ],
   "template_id": "castep.geometry_optimization.gui",
   "allowed_parameters": ["input_xsd", "quality", "properties_kpoint_quality", "dipole_correction"],

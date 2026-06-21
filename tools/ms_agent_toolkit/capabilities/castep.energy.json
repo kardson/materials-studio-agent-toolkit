@@ -7,7 +7,7 @@
     "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\share\\doc\\content\\scripting\\castepscripting\\apicasteprunenergy.htm"
   ],
   "official_example_refs": [
-    "C:\\Users\\kards\\Documents\\DFT_materials_studio_mcp_m1\\tools\\ms_bridge\\materials\\templates\\submit_castep_template.pl"
+    "tools/ms_bridge/materials/templates/submit_castep_template.pl"
   ],
   "template_id": "castep.energy.basic",
   "allowed_parameters": ["input_xsd", "quality"],
