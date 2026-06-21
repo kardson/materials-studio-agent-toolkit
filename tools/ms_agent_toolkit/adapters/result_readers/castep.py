@@ -5,11 +5,19 @@ from pathlib import Path
 from tools.ms_bridge.scripts.read_castep_result import parse_castep_bundle
 
 
+def _discover_single(result_dir: Path, pattern: str, label: str) -> Path:
+    matches = sorted(result_dir.glob(pattern))
+    if not matches:
+        raise FileNotFoundError(f"Missing {label} file in {result_dir}")
+    return matches[0]
+
+
 def parse_result_dir(result_dir: Path) -> dict:
     result_dir = Path(result_dir)
-    castep = result_dir / "sample.castep"
-    param = result_dir / "sample.param"
-    summary = result_dir / "sample_summary.txt"
+    castep = _discover_single(result_dir, "*.castep", "CASTEP result")
+    param = _discover_single(result_dir, "*.param", "CASTEP parameter")
+    summary_matches = sorted(result_dir.glob("*summary*.txt"))
+    summary = summary_matches[0] if summary_matches else None
     parsed = parse_castep_bundle(castep, param, summary)
     return {
         "ok": True,
@@ -20,7 +28,7 @@ def parse_result_dir(result_dir: Path) -> dict:
         "evidence": {
             "castepPath": str(castep),
             "paramPath": str(param),
-            "summaryPath": str(summary),
+            "summaryPath": str(summary) if summary else None,
         },
         "error": None,
     }

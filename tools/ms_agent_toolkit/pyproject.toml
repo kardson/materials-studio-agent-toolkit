@@ -24,4 +24,7 @@ packages = [
   "tools.ms_bridge",
   "tools.ms_bridge.scripts",
   "tools.ms_agent_toolkit",
+  "tools.ms_agent_toolkit.adapters",
+  "tools.ms_agent_toolkit.adapters.result_readers",
+  "tools.ms_agent_toolkit.commands",
 ]
