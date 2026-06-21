@@ -1,5 +1,9 @@
 # Materials Studio Agent Toolkit
 
+[中文](#中文说明) | [English](#english)
+
+## English
+
 `materials-studio-agent-toolkit` is a public, local-first toolkit for helping agents work with BIOVIA Materials Studio through structured scripts, capability cards, templates, and result readers.
 
 It is designed for the case where an agent shares a machine or workspace with a human operator and needs to:
@@ -11,13 +15,13 @@ It is designed for the case where an agent shares a machine or workspace with a 
 
 This repository does **not** expose an MCP server. The current delivery is a lightweight CLI toolkit plus a generic `SKILL.md`.
 
-## What this repository contains
+### What this repository contains
 
-### Core toolkit
+#### Core toolkit
 
 The main delivery lives under:
 
-- [tools/ms_agent_toolkit](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit)
+- `tools/ms_agent_toolkit`
 
 It includes:
 
@@ -27,28 +31,28 @@ It includes:
 - thin adapters
 - contract tests
 - mock fixtures
-- package metadata in [pyproject.toml](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit/pyproject.toml)
-- delivery README in [tools/ms_agent_toolkit/README.md](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit/README.md)
+- package metadata in `tools/ms_agent_toolkit/pyproject.toml`
+- a detailed delivery README in `tools/ms_agent_toolkit/README.md`
 
-### Generic skill guide
+#### Generic skill guide
 
 The agent-facing generic skill guide lives at:
 
-- [skills/materials-studio-agent-toolkit/SKILL.md](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/skills/materials-studio-agent-toolkit/SKILL.md)
+- `skills/materials-studio-agent-toolkit/SKILL.md`
 
 Use this with any skill-capable agent that can read or import a `SKILL.md` file.
 
-### Supporting bridge utilities
+#### Supporting bridge utilities
 
 This repo also includes the validated bridge layer that the toolkit currently wraps:
 
-- [tools/ms_bridge](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_bridge)
+- `tools/ms_bridge`
 
 Reference-only historical or supporting Materials Studio automation assets are also present here:
 
-- [tools/gateway_agent_bridge](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/gateway_agent_bridge)
+- `tools/gateway_agent_bridge`
 
-## First-release status
+### First-release status
 
 The current release includes:
 
@@ -70,17 +74,17 @@ Important current-state limitation:
 - the command wrappers in this release still focus on **structured request generation, packaging metadata, result normalization, and publication response shaping**
 - they do **not** yet provide a complete one-shot execution orchestrator that generates, runs, monitors, and publishes a full Materials Studio workflow end to end
 
-## Quick start
+### Quick start
 
-### Python requirements
+#### Python requirements
 
-From [tools/ms_agent_toolkit/pyproject.toml](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit/pyproject.toml):
+From `tools/ms_agent_toolkit/pyproject.toml`:
 
 - Python `>=3.12`
 - `pydantic>=2.0`
 - `jinja2>=3.1`
 
-### Install locally
+#### Install locally
 
 From the repository root:
 
@@ -88,7 +92,7 @@ From the repository root:
 py -3.12 -m pip install -e .\tools\ms_agent_toolkit
 ```
 
-### Main commands
+#### Main commands
 
 Declared console entrypoints:
 
@@ -115,14 +119,14 @@ read_module_result --module castep --result-dir C:/work/job42
 publish_to_project_documents --source-path C:/work/job42/output.xcd --source-path C:/work/job42/report.txt --project-documents-root C:/Projects/MyProject/Documents
 ```
 
-## Machine setup
+### Machine setup
 
 This repo does **not** bundle `RunMatScript.bat`. That comes from the local Materials Studio installation.
 
 Before using backend execution paths, review:
 
-- [tools/ms_bridge/config/bridge_config.example.json](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_bridge/config/bridge_config.example.json)
-- [tools/ms_agent_toolkit/config/toolkit_config.example.json](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit/config/toolkit_config.example.json)
+- `tools/ms_bridge/config/bridge_config.example.json`
+- `tools/ms_agent_toolkit/config/toolkit_config.example.json`
 
 In particular, fix:
 
@@ -135,53 +139,209 @@ In particular, fix:
 
 If `runMatScriptBat` is wrong, the toolkit cannot launch MaterialsScript through the existing bridge.
 
-## How to give this to another agent
+### How to give this to another agent
 
-### For a skill-capable agent
+#### For a skill-capable agent
 
 Provide:
 
-- [skills/materials-studio-agent-toolkit/SKILL.md](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/skills/materials-studio-agent-toolkit/SKILL.md)
-- the whole [tools/ms_agent_toolkit](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit) directory
-- the wrapped backend utilities under [tools/ms_bridge](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_bridge)
+- `skills/materials-studio-agent-toolkit/SKILL.md`
+- the whole `tools/ms_agent_toolkit` directory
+- the wrapped backend utilities under `tools/ms_bridge`
 
-The agent should read `SKILL.md`, then follow the command and capability flow described there.
-
-### For a non-skill-capable agent
+#### For a non-skill-capable agent
 
 Provide:
 
 - this repository
-- [tools/ms_agent_toolkit/README.md](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit/README.md)
+- `tools/ms_agent_toolkit/README.md`
 - the command-line entrypoints
 - the capability JSON files
 
-In that scenario, the agent can operate directly through the CLI wrappers and capability files.
+### What is not included yet
 
-## Repository structure
-
-Main areas:
-
-- [tools/ms_agent_toolkit](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_agent_toolkit)
-- [tools/ms_bridge](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/tools/ms_bridge)
-- [skills/materials-studio-agent-toolkit](C:/Users/kards/Documents/DFT_materials_studio_mcp_m1/skills/materials-studio-agent-toolkit)
-
-## What is not included yet
-
-This public repository does not yet include:
+This first version does not yet include:
 
 - an MCP server
 - a full one-shot execution orchestrator
 - non-CASTEP result readers
 - a completed Forcite execution path
-- a shipped knowledge pack directory under `tools/ms_agent_toolkit/knowledge`
-- experimental-mode command implementations in the current CLI wrappers
+- a shipped `tools/ms_agent_toolkit/knowledge/` directory
+- experimental-mode command implementations in the delivered CLI wrappers
 
-## Validation status
+For actual backend execution and low-level bridge behavior, continue to inspect and reuse `tools/ms_bridge/`.
 
-At the time of publication:
+---
 
-- toolkit test suite passed
-- `ms_bridge` test suite passed
+## 中文说明
 
-The toolkit is therefore published as a working first-release engineering artifact, not merely a design stub.
+`materials-studio-agent-toolkit` 是一个面向 BIOVIA Materials Studio 的本地优先工具包，用来帮助 agent 通过结构化脚本、capability card、模板和结果读取器来协助建模与计算。
+
+它适用于这样一种场景：
+
+1. agent 与人工操作者共享同一台机器或同一个工作区
+2. agent 需要根据约束好的能力卡生成 `MaterialsScript`
+3. agent 需要准备正式 GUI 提交包
+4. agent 需要读取和归一化计算结果
+5. agent 需要把部分结果整理到 project documents 中
+
+这个仓库 **不是** MCP 服务端。当前交付形态是：
+
+- 一个轻量 CLI toolkit
+- 一份通用 `SKILL.md`
+
+### 仓库包含什么
+
+#### 核心工具包
+
+主交付目录在：
+
+- `tools/ms_agent_toolkit`
+
+其中包括：
+
+- capability registry loader 和 capability JSON 文件
+- Jinja2 `.pl.j2` 模板
+- command wrapper
+- thin adapter
+- contract tests
+- mock fixture
+- 包元数据：`tools/ms_agent_toolkit/pyproject.toml`
+- 更详细的交付说明：`tools/ms_agent_toolkit/README.md`
+
+#### 通用 skill 指南
+
+agent 用的通用 skill 在：
+
+- `skills/materials-studio-agent-toolkit/SKILL.md`
+
+任何支持 skill 机制、并且能读取或导入 `SKILL.md` 的 agent 都可以使用它。
+
+#### 支撑 bridge 工具
+
+当前 toolkit 还复用了已经验证过的 bridge 层：
+
+- `tools/ms_bridge`
+
+另外仓库里还保留了一些历史性或参考性的 Materials Studio 自动化资产：
+
+- `tools/gateway_agent_bridge`
+
+### 第一版现状
+
+当前版本已经包含：
+
+- 在 `pyproject.toml` 中声明的 CLI 入口
+- 三张 capability card：
+  - `castep.energy`
+  - `castep.geometry_optimization`
+  - 预留的 `forcite.geometry_optimization`
+- 两个首发模板：
+  - standalone CASTEP energy
+  - GUI CASTEP geometry optimization
+- `castep` 结果读取支持
+- 通用 `SKILL.md`
+- 通过的 toolkit 测试
+- 通过的 `ms_bridge` 既有测试
+
+当前最重要的限制是：
+
+- 这些命令现在更偏向于**生成结构化请求、打包元数据、结果归一化和发布响应整形**
+- 它们**还不是**一个完整的一键式执行编排器，不能自动完成从生成、运行、监控到发布整个 Materials Studio 工作流
+
+### 快速开始
+
+#### Python 依赖
+
+来自 `tools/ms_agent_toolkit/pyproject.toml`：
+
+- Python `>=3.12`
+- `pydantic>=2.0`
+- `jinja2>=3.1`
+
+#### 本地安装
+
+在仓库根目录执行：
+
+```powershell
+py -3.12 -m pip install -e .\tools\ms_agent_toolkit
+```
+
+#### 主要命令
+
+当前声明的命令入口：
+
+- `run_materialscript`
+- `prepare_gui_submission_package`
+- `read_module_result`
+- `publish_to_project_documents`
+
+示例：
+
+```powershell
+run_materialscript --capability castep.energy --params-json "{\"input_xsd\":\"C:/work/model.xsd\",\"quality\":\"Fine\"}"
+```
+
+```powershell
+prepare_gui_submission_package --capability castep.geometry_optimization --input-xsd C:/work/model.xsd --output-dir C:/work/gui_package
+```
+
+```powershell
+read_module_result --module castep --result-dir C:/work/job42
+```
+
+```powershell
+publish_to_project_documents --source-path C:/work/job42/output.xcd --source-path C:/work/job42/report.txt --project-documents-root C:/Projects/MyProject/Documents
+```
+
+### 新机器上的配置
+
+这个仓库 **不包含** `RunMatScript.bat`。它来自本机安装的 Materials Studio。
+
+在使用 backend 执行相关路径之前，请先检查：
+
+- `tools/ms_bridge/config/bridge_config.example.json`
+- `tools/ms_agent_toolkit/config/toolkit_config.example.json`
+
+尤其需要修正：
+
+- `materialsStudioInstallRoot`
+- `runMatScriptBat`
+- `workspaceRoot`
+- `defaultProjectDocumentsRoot`
+- `capabilityRegistryPath`
+- `templatesRoot`
+
+如果 `runMatScriptBat` 路径不对，toolkit 就无法通过现有 bridge 启动 MaterialsScript。
+
+### 怎么交付给别的 agent
+
+#### 给支持 skill 的 agent
+
+交付：
+
+- `skills/materials-studio-agent-toolkit/SKILL.md`
+- 整个 `tools/ms_agent_toolkit` 目录
+- 被包装的 backend 工具 `tools/ms_bridge`
+
+#### 给不支持 skill 的 agent
+
+交付：
+
+- 这个仓库本身
+- `tools/ms_agent_toolkit/README.md`
+- 命令行入口
+- capability JSON 文件
+
+### 当前还不包含什么
+
+这个第一版目前还**不包含**：
+
+- MCP server
+- 完整的一键式执行编排器
+- 非 CASTEP 的结果读取器
+- 已实现的 Forcite 正式执行路径
+- 已交付的 `tools/ms_agent_toolkit/knowledge/` 目录
+- 当前 CLI wrapper 中真正实现的 experimental-mode 路径
+
+如果你需要低层 backend 执行行为，请继续直接查看和复用 `tools/ms_bridge/`。
