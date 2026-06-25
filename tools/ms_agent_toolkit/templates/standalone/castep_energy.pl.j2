@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use MaterialsScript qw(:all);
 
-my $doc = Documents->Item("{{ input_xsd }}");
+my $doc = Documents->Import("{{ input_xsd }}");
 my $results = Modules->CASTEP->Energy->Run($doc, Settings(
   Quality => "{{ quality|default('Coarse') }}"
 ));

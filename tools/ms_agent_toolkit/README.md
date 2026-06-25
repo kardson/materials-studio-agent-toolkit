@@ -16,7 +16,11 @@ This toolkit is the thin Python delivery layer for the first Materials Studio ag
 - Contract tests under `tools/ms_agent_toolkit/tests/`
 - Reused backend bridge utilities under `tools/ms_bridge/`
 
-Important current-state note: the command wrappers in this release mostly build and print JSON contracts or evidence payloads. They do not yet provide a full end-to-end installer, execution orchestrator, or file-producing packaging flow by themselves.
+Important current-state note: this release now includes one real standalone execution path, but the toolkit is still only partially operational end to end.
+
+- `run_materialscript` now renders a real `.pl` script, writes execution artifacts, calls the existing PowerShell bridge, and returns a normalized execution result.
+- The other commands still focus on packaging metadata, result normalization, and publication response shaping.
+- The toolkit still does not provide a complete one-shot orchestrator for a full Materials Studio workflow.
 
 ## Python and install requirements
 
@@ -81,7 +85,7 @@ These names come directly from `tools/ms_agent_toolkit/pyproject.toml`.
 
 ### `run_materialscript`
 
-Purpose: validate a compliant capability request and print a JSON payload that includes backend manifest data plus a bridge command string.
+Purpose: execute a compliant standalone capability through the existing `ms_bridge` path and return a normalized execution result.
 
 Example:
 
@@ -89,12 +93,16 @@ Example:
 run_materialscript --capability castep.energy --params-json "{\"input_xsd\":\"C:/work/model.xsd\",\"quality\":\"Fine\"}"
 ```
 
-Current behavior in M1:
+Current behavior in the current branch:
 
 - Reads a capability card from `tools/ms_agent_toolkit/capabilities/`
 - Verifies required and allowed parameters
-- Returns JSON with `mode`, `capabilityId`, backend `manifest`, and backend `command`
-- Does not itself execute `RunMatScript.bat`
+- Resolves the correct template
+- Renders a real `.pl` script
+- Writes `task_manifest.json`
+- Calls `tools/ms_bridge/scripts/invoke_materialscript.ps1`
+- Writes `run_result.json`
+- Returns normalized execution output with evidence paths
 
 ### `prepare_gui_submission_package`
 

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import json
+import subprocess
 from pathlib import Path
 
-from tools.ms_bridge.scripts.write_task_manifest import build_manifest
+from tools.ms_bridge.scripts.write_run_result import build_run_result, write_run_result
+from tools.ms_bridge.scripts.write_task_manifest import build_manifest, write_manifest
 
 
 def build_run_materialscript_command(
@@ -53,4 +56,40 @@ def build_backend_contract(
             timeout_seconds=timeout_seconds,
             script_arguments=script_arguments,
         ),
+    }
+
+
+def execute_backend_contract(
+    *,
+    backend: dict,
+    manifest_path: Path,
+    run_result_path: Path,
+) -> dict:
+    manifest_file = write_manifest(Path(manifest_path), backend["manifest"])
+    command = [
+        "powershell",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        backend["command"],
+    ]
+    completed = subprocess.run(command, capture_output=True, text=True, check=True)
+    bridge_response = json.loads(completed.stdout)
+    run_result = build_run_result(
+        ok=bool(bridge_response.get("ok", False)),
+        script_path=bridge_response["scriptPath"],
+        result_dir=backend["manifest"]["resultDir"],
+        gui_visible_mode="standalone",
+        known_files=[
+            bridge_response.get("nativeStdoutPath"),
+            bridge_response.get("nativeLogPath"),
+        ],
+        error=None if bridge_response.get("ok", False) else "MaterialsScript execution failed",
+    )
+    run_result_file = write_run_result(Path(run_result_path), run_result)
+    return {
+        "manifestPath": str(manifest_file),
+        "runResultPath": str(run_result_file),
+        "bridgeResponse": bridge_response,
+        "runResult": run_result,
     }
