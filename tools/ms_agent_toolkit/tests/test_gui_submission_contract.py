@@ -1,6 +1,10 @@
+import json
+import shutil
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
-from tools.ms_agent_toolkit.adapters.gui_submission import build_gui_manifest
+from tools.ms_agent_toolkit.adapters.gui_submission import build_gui_manifest, write_gui_package
 
 
 class BuildGuiManifestTests(unittest.TestCase):
@@ -12,6 +16,31 @@ class BuildGuiManifestTests(unittest.TestCase):
         )
         self.assertEqual(result["stage"], "script_generated")
         self.assertEqual(result["capabilityId"], "castep.geometry_optimization")
+
+    def test_write_gui_package_materializes_expected_files(self) -> None:
+        output_dir = Path(r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\tests\_gui_package")
+        if output_dir.exists():
+            shutil.rmtree(output_dir)
+        input_xsd = output_dir.parent / "input.xsd"
+        input_xsd.write_text("dummy xsd", encoding="utf-8")
+        try:
+            result = write_gui_package(
+                capability_id="castep.geometry_optimization",
+                input_xsd=str(input_xsd),
+                output_dir=str(output_dir),
+                parameters={"input_xsd": input_xsd.name},
+                template_root=Path(r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\templates"),
+                capability_root=Path(r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\capabilities"),
+            )
+            self.assertTrue((output_dir / "job.pl").exists())
+            self.assertTrue((output_dir / "task_manifest.json").exists())
+            self.assertTrue((output_dir / "README.md").exists())
+            self.assertEqual(result["stage"], "script_generated")
+        finally:
+            if input_xsd.exists():
+                input_xsd.unlink()
+            if output_dir.exists():
+                shutil.rmtree(output_dir)
 
 
 if __name__ == "__main__":
