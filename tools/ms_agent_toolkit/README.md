@@ -40,6 +40,7 @@ It also declares these console-script names:
 - `run_materialscript`
 - `prepare_gui_submission_package`
 - `read_module_result`
+- `report_next_step`
 - `publish_to_project_documents`
 
 Practical note: this repo currently ships the local `pyproject.toml`, command modules, and package code, but not a separate polished release/install workflow beyond that. Treat the `pyproject.toml` as the source of truth for Python version, dependencies, and entrypoint names.
@@ -169,6 +170,26 @@ The intended agent loop is:
 2. read the result
 3. inspect `analysis.summary`
 4. present `analysis.nextStepOptions` to the human for the next run choice
+
+### `report_next_step`
+
+Purpose: turn one parsed result bundle into a fixed-shape round report for the human decision point after each run.
+
+Example:
+
+```powershell
+report_next_step --module castep --result-dir C:/work/job42
+```
+
+Current behavior in the current branch:
+
+- Reuses the same result parsing path as `read_module_result`
+- Returns `stage: "round_report_ready"`
+- Returns:
+  - `analysis.summary`
+  - `archiveRecommendation`
+  - `nextExecutionPlan`
+- This is the intended command for the "analyze this round and propose the next round" step
 
 ### `publish_to_project_documents`
 
