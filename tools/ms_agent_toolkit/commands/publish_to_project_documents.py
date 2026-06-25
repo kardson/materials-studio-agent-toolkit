@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 
-from tools.ms_agent_toolkit.adapters.publication import build_publication_response
+from tools.ms_agent_toolkit.adapters.publication import publish_files
 
 
 def main() -> int:
@@ -13,9 +13,9 @@ def main() -> int:
     args = parser.parse_args()
     print(
         json.dumps(
-            build_publication_response(
-                published_paths=args.source_path,
-                manifest_path=f"{args.project_documents_root}/task_manifest.json",
+            publish_files(
+                source_paths=args.source_path,
+                project_documents_root=args.project_documents_root,
             ),
             ensure_ascii=False,
         )
