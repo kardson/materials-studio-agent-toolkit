@@ -65,6 +65,54 @@ class BuildCompliantRequestTests(unittest.TestCase):
         self.assertEqual(result["evidence"]["runResultPath"], "C:/tmp/run_result.json")
         self.assertEqual(result["evidence"]["nativeStdoutPath"], "C:/tmp/job.pl.out")
 
+    def test_run_compliant_request_enqueues_gui_loop_job(self) -> None:
+        with patch(
+            "tools.ms_agent_toolkit.commands.run_materialscript.load_config"
+        ) as load_config_mock, patch(
+            "tools.ms_agent_toolkit.commands.run_materialscript.render_template",
+            return_value="rendered script",
+        ), patch(
+            "tools.ms_agent_toolkit.commands.run_materialscript.enqueue_gui_loop_job",
+            return_value={
+                "stage": "task_queued",
+                "scriptPath": "C:/tmp/gui_loop_queue/pending/job42.pl",
+                "manifestPath": "C:/tmp/workspace/task_manifest.json",
+                "runResultPath": "C:/tmp/workspace/run_result.json",
+            },
+        ), patch.object(Path, "write_text", return_value=None):
+            load_config_mock.return_value = type(
+                "Cfg",
+                (),
+                {
+                    "run_mat_script_bat": "C:/MS/RunMatScript.bat",
+                    "gui_loop_queue_root": "C:/tmp/gui_loop_queue",
+                },
+            )()
+            result = run_compliant_request(
+                capability_id="castep.geometry_optimization",
+                params_json=json.dumps({"input_xsd": "model.xsd", "quality": "Fine"}),
+                backend="gui_loop",
+            )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["stage"], "task_queued")
+        self.assertEqual(result["backend"], "gui_loop")
+        self.assertEqual(result["capabilityId"], "castep.geometry_optimization")
+        self.assertEqual(
+            result["evidence"]["queuedScriptPath"],
+            "C:/tmp/gui_loop_queue/pending/job42.pl",
+        )
+
+    def test_build_gui_loop_request_uses_gui_document_name_in_template_parameters(self) -> None:
+        request = build_compliant_request(
+            capability_id="castep.geometry_optimization",
+            params_json='{"input_xsd":"C:/work/model.xsd","quality":"Fine"}',
+            backend="gui_loop",
+        )
+
+        self.assertEqual(request["parameters"]["input_xsd"], "model.xsd")
+        self.assertEqual(request["backend"]["manifest"]["inputDocument"], "C:/work/model.xsd")
+
 
 if __name__ == "__main__":
     unittest.main()

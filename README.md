@@ -9,9 +9,10 @@
 It is designed for the case where an agent shares a machine or workspace with a human operator and needs to:
 
 1. generate `MaterialsScript` from approved capability definitions
-2. prepare formal GUI submission packages
-3. read and normalize calculation results
-4. publish selected outputs into project documents
+2. execute those scripts through either a direct standalone bridge or a GUI-resident queue runner
+3. prepare formal GUI submission packages
+4. read, normalize, and analyze calculation results
+5. publish selected outputs into project documents
 
 This repository does **not** expose an MCP server. The current delivery is a lightweight CLI toolkit plus a generic `SKILL.md`.
 
@@ -65,14 +66,21 @@ The current release includes:
   - standalone CASTEP energy
   - GUI CASTEP geometry optimization
 - result reading support for `castep`
+- first-pass structured result analysis with candidate next-step options
 - a generic skill guide
 - passing toolkit tests
 - passing legacy `ms_bridge` tests
 
-Important current-state limitation:
+Current state:
 
-- the command wrappers in this release still focus on **structured request generation, packaging metadata, result normalization, and publication response shaping**
-- they do **not** yet provide a complete one-shot execution orchestrator that generates, runs, monitors, and publishes a full Materials Studio workflow end to end
+- `run_materialscript` supports a real standalone execution path
+- `run_materialscript --backend gui_loop` supports queue-based handoff to a Materials Studio GUI-resident runner in the isolated repo
+- `read_module_result` now returns both parsed output and a lightweight analysis block with next-step options
+- `publish_to_project_documents` performs a real local publication step
+
+Remaining limitation:
+
+- the toolkit still does not start or supervise the Materials Studio GUI loop process by itself; the GUI-resident loop must already be running when `--backend gui_loop` is used
 
 ### Quick start
 
@@ -108,6 +116,10 @@ run_materialscript --capability castep.energy --params-json "{\"input_xsd\":\"C:
 ```
 
 ```powershell
+run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json "{\"input_xsd\":\"model.xsd\",\"quality\":\"Fine\"}"
+```
+
+```powershell
 prepare_gui_submission_package --capability castep.geometry_optimization --input-xsd C:/work/model.xsd --output-dir C:/work/gui_package
 ```
 
@@ -139,6 +151,8 @@ In particular, fix:
 
 If `runMatScriptBat` is wrong, the toolkit cannot launch MaterialsScript through the existing bridge.
 
+For `gui_loop` execution, also review `guiLoopQueueRoot` in `tools/ms_agent_toolkit/config/toolkit_config.example.json`. In the current delivery it points at the isolated repo queue under `C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\gui_loop_queue`, not at the scientific workspace.
+
 ### How to give this to another agent
 
 #### For a skill-capable agent
@@ -163,11 +177,11 @@ Provide:
 This first version does not yet include:
 
 - an MCP server
-- a full one-shot execution orchestrator
 - non-CASTEP result readers
 - a completed Forcite execution path
 - a shipped `tools/ms_agent_toolkit/knowledge/` directory
 - experimental-mode command implementations in the delivered CLI wrappers
+- automatic startup control for the Materials Studio GUI loop
 
 For actual backend execution and low-level bridge behavior, continue to inspect and reuse `tools/ms_bridge/`.
 

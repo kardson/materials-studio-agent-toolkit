@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from tools.ms_agent_toolkit.adapters.gui_loop_runner import enqueue_gui_loop_job
 from tools.ms_agent_toolkit.adapters.materialscript_runner import (
     build_backend_contract,
     execute_backend_contract,
@@ -13,7 +14,7 @@ from tools.ms_agent_toolkit.config import load_config
 from tools.ms_agent_toolkit.templates import render_template, resolve_template_path
 
 
-def build_compliant_request(capability_id: str, params_json: str) -> dict:
+def build_compliant_request(capability_id: str, params_json: str, backend: str = "standalone") -> dict:
     parameters = json.loads(params_json)
     registry = CapabilityRegistry(Path(__file__).resolve().parents[1] / "capabilities")
     capability = registry.get(capability_id)
@@ -25,15 +26,19 @@ def build_compliant_request(capability_id: str, params_json: str) -> dict:
         raise ValueError(f"Missing required parameters for {capability_id}: {', '.join(missing)}")
 
     input_document = str(parameters["input_xsd"])
+    template_parameters = dict(parameters)
+    if backend == "gui_loop":
+        template_parameters["input_xsd"] = Path(input_document).name
     script_path = str(Path(input_document).with_suffix(".pl"))
     result_dir = str(Path(input_document).with_suffix(""))
     return {
         "mode": "compliant",
+        "backend": backend,
         "capabilityId": capability_id,
         "module": capability["module"],
         "task": capability["task"],
         "templateId": capability["template_id"],
-        "parameters": parameters,
+        "parameters": template_parameters,
         "backend": build_backend_contract(
             invoke_script=str(
                 Path(__file__).resolve().parents[2]
@@ -47,13 +52,13 @@ def build_compliant_request(capability_id: str, params_json: str) -> dict:
             script_arguments=[input_document],
             input_document=input_document,
             result_dir=result_dir,
-            parameters=parameters,
+            parameters=template_parameters,
         ),
     }
 
 
-def run_compliant_request(capability_id: str, params_json: str) -> dict:
-    request = build_compliant_request(capability_id, params_json)
+def run_compliant_request(capability_id: str, params_json: str, backend: str = "standalone") -> dict:
+    request = build_compliant_request(capability_id, params_json, backend=backend)
     repo_root = Path(__file__).resolve().parents[3]
     toolkit_root = Path(__file__).resolve().parents[1]
     bridge_config_path = repo_root / "tools" / "ms_bridge" / "config" / "bridge_config.example.json"
@@ -67,6 +72,33 @@ def run_compliant_request(capability_id: str, params_json: str) -> dict:
     rendered_script = render_template(template_path, request["parameters"])
     script_path = workspace_root / f"{request['backend']['manifest']['taskId']}.pl"
     script_path.write_text(rendered_script, encoding="utf-8")
+
+    if backend == "gui_loop":
+        queue_result = enqueue_gui_loop_job(
+            queue_root=Path(config.gui_loop_queue_root),
+            workspace_root=workspace_root,
+            job_name=script_path.name,
+            rendered_script=rendered_script,
+            manifest=request["backend"]["manifest"],
+        )
+        return {
+            "ok": True,
+            "stage": queue_result["stage"],
+            "mode": request["mode"],
+            "backend": "gui_loop",
+            "capabilityId": request["capabilityId"],
+            "module": request["module"],
+            "task": request["task"],
+            "templateId": request["templateId"],
+            "parameters": request["parameters"],
+            "evidence": {
+                "scriptPath": str(script_path),
+                "queuedScriptPath": queue_result["scriptPath"],
+                "manifestPath": queue_result["manifestPath"],
+                "runResultPath": queue_result["runResultPath"],
+            },
+            "error": None,
+        }
 
     backend = dict(request["backend"])
     backend["manifest"] = dict(backend["manifest"])
@@ -112,8 +144,14 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--capability", required=True)
     parser.add_argument("--params-json", required=True)
+    parser.add_argument("--backend", choices=["standalone", "gui_loop"], default="standalone")
     args = parser.parse_args()
-    print(json.dumps(run_compliant_request(args.capability, args.params_json), ensure_ascii=False))
+    print(
+        json.dumps(
+            run_compliant_request(args.capability, args.params_json, backend=args.backend),
+            ensure_ascii=False,
+        )
+    )
     return 0
 
 

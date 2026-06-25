@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from tools.ms_agent_toolkit.adapters.analysis import build_result_analysis
 from tools.ms_bridge.scripts.read_castep_result import parse_castep_bundle
 
 
@@ -25,6 +26,7 @@ def parse_result_dir(result_dir: Path) -> dict:
         "mode": "generic",
         "capabilityId": None,
         "result": parsed,
+        "analysis": build_result_analysis("castep", parsed),
         "evidence": {
             "castepPath": str(castep),
             "paramPath": str(param),

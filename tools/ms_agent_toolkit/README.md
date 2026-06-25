@@ -16,12 +16,14 @@ This toolkit is the thin Python delivery layer for the first Materials Studio ag
 - Contract tests under `tools/ms_agent_toolkit/tests/`
 - Reused backend bridge utilities under `tools/ms_bridge/`
 
-Important current-state note: this release now includes one real standalone execution path, one real GUI package writer, and one real local publication step, but the toolkit is still only partially operational end to end.
+Important current-state note: this release now includes one real standalone execution path, one real GUI-loop queue execution path, one real GUI package writer, one real local publication step, and one first-pass result-analysis layer.
 
 - `run_materialscript` now renders a real `.pl` script, writes execution artifacts, calls the existing PowerShell bridge, and returns a normalized execution result.
+- `run_materialscript --backend gui_loop` now renders a real `.pl` script, writes isolated workspace artifacts, and enqueues the script into the isolated GUI-loop queue for a Materials Studio GUI-resident runner.
 - `prepare_gui_submission_package` now writes a real package skeleton to disk, including a copied input `.xsd`, a rendered `.pl`, `task_manifest.json`, and `README.md`.
+- `read_module_result` now returns both parsed raw results and a lightweight analysis block with a summary and candidate next-step options.
 - `publish_to_project_documents` now performs a real local file publication into the target documents directory and writes a publication manifest.
-- The toolkit still does not provide a complete one-shot orchestrator for a full Materials Studio workflow.
+- The toolkit still does not provide a single fully automatic orchestrator that starts the Materials Studio GUI loop itself.
 
 ## Python and install requirements
 
@@ -65,6 +67,9 @@ Fields that must be reviewed on a new machine:
   - `templatesRoot`
   - `knowledgeRoot`
   - `experimentalAuditRoot`
+  - `guiLoopQueueRoot`
+  - `guiLoopPollSeconds`
+  - `guiLoopDefaultWaitSeconds`
 
 ### `RunMatScript.bat`
 
@@ -86,12 +91,16 @@ These names come directly from `tools/ms_agent_toolkit/pyproject.toml`.
 
 ### `run_materialscript`
 
-Purpose: execute a compliant standalone capability through the existing `ms_bridge` path and return a normalized execution result.
+Purpose: execute a compliant capability through either the standalone bridge path or the GUI-loop queue path and return a normalized execution result.
 
 Example:
 
 ```powershell
 run_materialscript --capability castep.energy --params-json "{\"input_xsd\":\"C:/work/model.xsd\",\"quality\":\"Fine\"}"
+```
+
+```powershell
+run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json "{\"input_xsd\":\"model.xsd\",\"quality\":\"Fine\"}"
 ```
 
 Current behavior in the current branch:
@@ -100,10 +109,20 @@ Current behavior in the current branch:
 - Verifies required and allowed parameters
 - Resolves the correct template
 - Renders a real `.pl` script
-- Writes `task_manifest.json`
-- Calls `tools/ms_bridge/scripts/invoke_materialscript.ps1`
-- Writes `run_result.json`
+- In `standalone` mode:
+  - Writes `task_manifest.json`
+  - Calls `tools/ms_bridge/scripts/invoke_materialscript.ps1`
+  - Writes `run_result.json`
+- In `gui_loop` mode:
+  - Writes isolated workspace artifacts under the repo-local workspace tree
+  - Copies the rendered script into `tools/gui_loop_queue/pending/`
+  - Returns `stage: "task_queued"` with queue evidence paths
 - Returns normalized execution output with evidence paths
+
+Important `gui_loop` precondition:
+
+- The current GUI geometry-optimization template reads `$Documents{...}` from the active Materials Studio GUI project.
+- That means the input document name passed through `--params-json` must already exist in the GUI-visible project when `--backend gui_loop` is used for `castep.geometry_optimization`.
 
 ### `prepare_gui_submission_package`
 
@@ -139,7 +158,17 @@ Current behavior in M1:
 - Only `castep` is supported
 - Expects to find one `*.castep` file and one `*.param` file
 - Optionally includes a `*summary*.txt`
-- Returns `stage: "result_parsed"` with evidence paths and parsed result content
+- Returns `stage: "result_parsed"` with evidence paths, parsed result content, and:
+  - `analysis.summary`
+  - `analysis.status`
+  - `analysis.nextStepOptions`
+
+The intended agent loop is:
+
+1. run a capability
+2. read the result
+3. inspect `analysis.summary`
+4. present `analysis.nextStepOptions` to the human for the next run choice
 
 ### `publish_to_project_documents`
 
@@ -192,7 +221,9 @@ It is meant as a lightweight operating guide, not as a hidden source of extra im
 
 - Prefer a capability card first
 - Stay in compliant mode when a shipped capability exists
+- Choose `standalone` or `gui_loop` execution intentionally
 - Treat result `stage` values as execution-state signals
+- Read `analysis.summary` and `analysis.nextStepOptions` after each completed parsing step
 - Avoid treating the toolkit as a scientific decision engine
 
 In practice, the skill file should be read together with:
@@ -212,5 +243,6 @@ This first version does not yet include:
 - A shipped `tools/ms_agent_toolkit/knowledge/` directory, despite the reserved `knowledgeRoot` config field
 - Experimental-mode command handling in the delivered CLI wrappers
 - A full MCP server package under this toolkit directory
+- Automatic startup control for the Materials Studio GUI loop itself
 
 For actual backend execution and low-level bridge behavior, continue to inspect and reuse `tools/ms_bridge/`.

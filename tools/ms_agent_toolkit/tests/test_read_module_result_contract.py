@@ -34,6 +34,10 @@ class ParseResultDirTests(unittest.TestCase):
         self.assertTrue(result["evidence"]["castepPath"].endswith("job42.castep"))
         self.assertTrue(result["evidence"]["paramPath"].endswith("job42.param"))
         self.assertTrue(result["evidence"]["summaryPath"].endswith("job42_summary.txt"))
+        self.assertIn("analysis", result)
+        self.assertIn("summary", result["analysis"])
+        self.assertIn("nextStepOptions", result["analysis"])
+        self.assertEqual(result["analysis"]["status"], "completed")
 
 
 if __name__ == "__main__":

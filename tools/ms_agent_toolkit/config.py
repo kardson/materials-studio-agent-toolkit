@@ -15,6 +15,9 @@ class ToolkitConfig:
     templates_root: str
     knowledge_root: str
     experimental_audit_root: str
+    gui_loop_queue_root: str
+    gui_loop_poll_seconds: int
+    gui_loop_default_wait_seconds: int
 
 
 def _read_json(path: Path) -> dict:
@@ -33,4 +36,7 @@ def load_config(bridge_config_path: Path, toolkit_config_path: Path) -> ToolkitC
         templates_root=toolkit["templatesRoot"],
         knowledge_root=toolkit["KnowledgeRoot"] if "KnowledgeRoot" in toolkit else toolkit["knowledgeRoot"],
         experimental_audit_root=toolkit["experimentalAuditRoot"],
+        gui_loop_queue_root=toolkit.get("guiLoopQueueRoot", ""),
+        gui_loop_poll_seconds=int(toolkit.get("guiLoopPollSeconds", 2)),
+        gui_loop_default_wait_seconds=int(toolkit.get("guiLoopDefaultWaitSeconds", 60)),
     )

@@ -14,6 +14,7 @@ dependencies = [
 
 [project.scripts]
 run_materialscript = "tools.ms_agent_toolkit.commands.run_materialscript:main"
+get_gui_loop_status = "tools.ms_agent_toolkit.commands.get_gui_loop_status:main"
 prepare_gui_submission_package = "tools.ms_agent_toolkit.commands.prepare_gui_submission_package:main"
 read_module_result = "tools.ms_agent_toolkit.commands.read_module_result:main"
 publish_to_project_documents = "tools.ms_agent_toolkit.commands.publish_to_project_documents:main"

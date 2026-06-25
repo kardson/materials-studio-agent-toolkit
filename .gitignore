@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+.venv/
 
 tools/gui_loop_queue/
 tools/ms_bridge/workspace/
