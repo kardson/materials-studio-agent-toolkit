@@ -24,6 +24,14 @@ def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def resolve_config_path(config_dir: Path, base_name: str) -> Path:
+    concrete = Path(config_dir) / f"{base_name}.json"
+    example = Path(config_dir) / f"{base_name}.example.json"
+    if concrete.exists():
+        return concrete
+    return example
+
+
 def load_config(bridge_config_path: Path, toolkit_config_path: Path) -> ToolkitConfig:
     bridge = _read_json(Path(bridge_config_path))
     toolkit = _read_json(Path(toolkit_config_path))

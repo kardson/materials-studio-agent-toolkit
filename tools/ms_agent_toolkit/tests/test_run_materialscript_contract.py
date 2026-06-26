@@ -4,18 +4,22 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tools.ms_agent_toolkit.commands.run_materialscript import (
-    _resolve_config_path,
     build_compliant_request,
+    load_params_payload,
     run_compliant_request,
 )
 
 
 class BuildCompliantRequestTests(unittest.TestCase):
-    def test_resolve_config_path_prefers_concrete_json_over_example(self) -> None:
-        with patch.object(Path, "exists", side_effect=[True]):
-            resolved = _resolve_config_path(Path("C:/tmp/config"), "bridge_config")
+    def test_load_params_payload_reads_params_file(self) -> None:
+        with patch.object(Path, "read_text", return_value='{"input_xsd":"model.xsd","quality":"Fine"}'):
+            payload = load_params_payload(
+                params_json=None,
+                params_file="C:/tmp/params.json",
+            )
 
-        self.assertEqual(str(resolved).replace("\\", "/"), "C:/tmp/config/bridge_config.json")
+        self.assertEqual(payload["input_xsd"], "model.xsd")
+        self.assertEqual(payload["quality"], "Fine")
 
     def test_build_request_reads_params_json_and_wires_backend_contract(self) -> None:
         request = build_compliant_request(

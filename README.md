@@ -120,6 +120,7 @@ This command is expected to work directly from the checked-out repo. The package
 
 Declared console entrypoints:
 
+- `ms_agent_toolkit_doctor`
 - `run_materialscript`
 - `get_gui_loop_status`
 - `prepare_gui_submission_package`
@@ -135,6 +136,10 @@ run_materialscript --capability castep.energy --params-json $params
 ```
 
 ```powershell
+run_materialscript --capability castep.energy --params-file C:/work/params.json
+```
+
+```powershell
 $params = '{"input_xsd":"model.xsd","quality":"Fine"}'
 run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json $params
 ```
@@ -144,11 +149,19 @@ prepare_gui_submission_package --capability castep.geometry_optimization --input
 ```
 
 ```powershell
+prepare_gui_submission_package --capability castep.geometry_optimization --input-xsd C:/work/model.xsd --output-dir C:/work/gui_package --params-file C:/work/gui_params.json
+```
+
+```powershell
 read_module_result --module castep --result-dir C:/work/job42
 ```
 
 ```powershell
 report_next_step --module castep --result-dir C:/work/job42
+```
+
+```powershell
+ms_agent_toolkit_doctor
 ```
 
 ```powershell
@@ -166,7 +179,7 @@ Before using backend execution paths, review:
 
 Fallback behavior:
 
-- `run_materialscript` prefers `bridge_config.json` and `toolkit_config.json`
+- toolkit commands that load runtime config prefer `bridge_config.json` and `toolkit_config.json`
 - if a concrete file is missing, it falls back to the matching `*.example.json`
 
 In particular, fix:

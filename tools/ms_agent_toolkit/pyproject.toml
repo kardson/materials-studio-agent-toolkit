@@ -13,6 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
+ms_agent_toolkit_doctor = "tools.ms_agent_toolkit.commands.doctor:main"
 run_materialscript = "tools.ms_agent_toolkit.commands.run_materialscript:main"
 get_gui_loop_status = "tools.ms_agent_toolkit.commands.get_gui_loop_status:main"
 prepare_gui_submission_package = "tools.ms_agent_toolkit.commands.prepare_gui_submission_package:main"

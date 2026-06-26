@@ -5,9 +5,19 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tools.ms_agent_toolkit.adapters.gui_submission import build_gui_manifest, write_gui_package
+from tools.ms_agent_toolkit.commands.prepare_gui_submission_package import load_gui_package_parameters
 
 
 class BuildGuiManifestTests(unittest.TestCase):
+    def test_load_gui_package_parameters_reads_params_file(self) -> None:
+        with patch.object(Path, "read_text", return_value='{"quality":"Fine"}'):
+            payload = load_gui_package_parameters(
+                params_json=None,
+                params_file="C:/tmp/gui_params.json",
+            )
+
+        self.assertEqual(payload["quality"], "Fine")
+
     def test_manifest_returns_script_generated_stage(self) -> None:
         result = build_gui_manifest(
             capability_id="castep.geometry_optimization",

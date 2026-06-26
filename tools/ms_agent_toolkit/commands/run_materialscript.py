@@ -10,20 +10,13 @@ from tools.ms_agent_toolkit.adapters.materialscript_runner import (
     execute_backend_contract,
 )
 from tools.ms_agent_toolkit.capabilities import CapabilityRegistry
-from tools.ms_agent_toolkit.config import load_config
+from tools.ms_agent_toolkit.commands.common import load_params_payload
+from tools.ms_agent_toolkit.config import load_config, resolve_config_path
 from tools.ms_agent_toolkit.templates import render_template, resolve_template_path
 
 
-def _resolve_config_path(config_dir: Path, base_name: str) -> Path:
-    concrete = config_dir / f"{base_name}.json"
-    example = config_dir / f"{base_name}.example.json"
-    if concrete.exists():
-        return concrete
-    return example
-
-
 def build_compliant_request(capability_id: str, params_json: str, backend: str = "standalone") -> dict:
-    parameters = json.loads(params_json)
+    parameters = load_params_payload(params_json=params_json, params_file=None)
     registry = CapabilityRegistry(Path(__file__).resolve().parents[1] / "capabilities")
     capability = registry.get(capability_id)
     unsupported = sorted(set(parameters) - set(capability["allowed_parameters"]))
@@ -69,8 +62,8 @@ def run_compliant_request(capability_id: str, params_json: str, backend: str = "
     request = build_compliant_request(capability_id, params_json, backend=backend)
     repo_root = Path(__file__).resolve().parents[3]
     toolkit_root = Path(__file__).resolve().parents[1]
-    bridge_config_path = _resolve_config_path(repo_root / "tools" / "ms_bridge" / "config", "bridge_config")
-    toolkit_config_path = _resolve_config_path(toolkit_root / "config", "toolkit_config")
+    bridge_config_path = resolve_config_path(repo_root / "tools" / "ms_bridge" / "config", "bridge_config")
+    toolkit_config_path = resolve_config_path(toolkit_root / "config", "toolkit_config")
     config = load_config(bridge_config_path, toolkit_config_path)
 
     workspace_root = repo_root / "tools" / "ms_bridge" / "workspace" / request["backend"]["manifest"]["taskId"]
@@ -151,12 +144,19 @@ def run_compliant_request(capability_id: str, params_json: str, backend: str = "
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--capability", required=True)
-    parser.add_argument("--params-json", required=True)
+    parser.add_argument("--params-json")
+    parser.add_argument("--params-file")
     parser.add_argument("--backend", choices=["standalone", "gui_loop"], default="standalone")
     args = parser.parse_args()
+    params_json = json.dumps(
+        load_params_payload(
+            params_json=args.params_json,
+            params_file=args.params_file,
+        )
+    )
     print(
         json.dumps(
-            run_compliant_request(args.capability, args.params_json, backend=args.backend),
+            run_compliant_request(args.capability, params_json, backend=args.backend),
             ensure_ascii=False,
         )
     )

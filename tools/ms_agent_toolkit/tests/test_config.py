@@ -2,10 +2,25 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from tools.ms_agent_toolkit.config import load_config
+from tools.ms_agent_toolkit.config import load_config, resolve_config_path
 
 
 class LoadConfigTests(unittest.TestCase):
+    def test_resolve_config_path_prefers_concrete_json(self) -> None:
+        with patch.object(Path, "exists", side_effect=[True]):
+            resolved = resolve_config_path(Path("C:/tmp/config"), "bridge_config")
+
+        self.assertEqual(str(resolved).replace("\\", "/"), "C:/tmp/config/bridge_config.json")
+
+    def test_resolve_config_path_falls_back_to_example_json(self) -> None:
+        with patch.object(Path, "exists", side_effect=[False]):
+            resolved = resolve_config_path(Path("C:/tmp/config"), "bridge_config")
+
+        self.assertEqual(
+            str(resolved).replace("\\", "/"),
+            "C:/tmp/config/bridge_config.example.json",
+        )
+
     def test_load_config_merges_bridge_and_toolkit_config(self) -> None:
         bridge = Path("bridge.json")
         toolkit = Path("toolkit.json")

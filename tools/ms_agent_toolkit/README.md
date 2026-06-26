@@ -37,6 +37,7 @@ The package metadata lives at `tools/ms_agent_toolkit/pyproject.toml`. It curren
 
 It also declares these console-script names:
 
+- `ms_agent_toolkit_doctor`
 - `run_materialscript`
 - `get_gui_loop_status`
 - `prepare_gui_submission_package`
@@ -119,6 +120,10 @@ $params = '{"input_xsd":"model.xsd","quality":"Fine"}'
 run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json $params
 ```
 
+```powershell
+run_materialscript --capability castep.energy --params-file C:/work/params.json
+```
+
 Current behavior in the current branch:
 
 - Reads a capability card from `tools/ms_agent_toolkit/capabilities/`
@@ -134,6 +139,7 @@ Current behavior in the current branch:
   - Copies the rendered script into `tools/gui_loop_queue/pending/`
   - Returns `stage: "task_queued"` with queue evidence paths
 - Returns normalized execution output with evidence paths
+- Accepts either `--params-json` or `--params-file`
 
 Important `gui_loop` precondition:
 
@@ -152,6 +158,10 @@ Example:
 prepare_gui_submission_package --capability castep.geometry_optimization --input-xsd C:/work/model.xsd --output-dir C:/work/gui_package
 ```
 
+```powershell
+prepare_gui_submission_package --capability castep.geometry_optimization --input-xsd C:/work/model.xsd --output-dir C:/work/gui_package --params-file C:/work/gui_params.json
+```
+
 Current behavior in the current branch:
 
 - Returns `stage: "script_generated"`
@@ -160,6 +170,7 @@ Current behavior in the current branch:
 - Writes `task_manifest.json`
 - Writes a package-local `README.md`
 - Returns normalized artifact paths in the response
+- Accepts either `--params-json` or `--params-file`
 
 Template note for GUI geometry optimization:
 
@@ -213,6 +224,23 @@ Current behavior in the current branch:
   - `archiveRecommendation`
   - `nextExecutionPlan`
 - This is the intended command for the "analyze this round and propose the next round" step
+
+### `ms_agent_toolkit_doctor`
+
+Purpose: run a static preflight over the local toolkit installation and configuration assumptions.
+
+Example:
+
+```powershell
+ms_agent_toolkit_doctor
+```
+
+Current behavior in the current branch:
+
+- Resolves the effective bridge and toolkit config paths
+- Reports whether `RunMatScript.bat` exists at the configured location
+- Reports whether `guiLoopQueueRoot` exists
+- Explicitly states that this project is a CLI toolkit, not an MCP server
 
 ### `publish_to_project_documents`
 
