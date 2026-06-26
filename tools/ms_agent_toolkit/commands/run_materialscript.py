@@ -14,6 +14,14 @@ from tools.ms_agent_toolkit.config import load_config
 from tools.ms_agent_toolkit.templates import render_template, resolve_template_path
 
 
+def _resolve_config_path(config_dir: Path, base_name: str) -> Path:
+    concrete = config_dir / f"{base_name}.json"
+    example = config_dir / f"{base_name}.example.json"
+    if concrete.exists():
+        return concrete
+    return example
+
+
 def build_compliant_request(capability_id: str, params_json: str, backend: str = "standalone") -> dict:
     parameters = json.loads(params_json)
     registry = CapabilityRegistry(Path(__file__).resolve().parents[1] / "capabilities")
@@ -61,8 +69,8 @@ def run_compliant_request(capability_id: str, params_json: str, backend: str = "
     request = build_compliant_request(capability_id, params_json, backend=backend)
     repo_root = Path(__file__).resolve().parents[3]
     toolkit_root = Path(__file__).resolve().parents[1]
-    bridge_config_path = repo_root / "tools" / "ms_bridge" / "config" / "bridge_config.example.json"
-    toolkit_config_path = toolkit_root / "config" / "toolkit_config.example.json"
+    bridge_config_path = _resolve_config_path(repo_root / "tools" / "ms_bridge" / "config", "bridge_config")
+    toolkit_config_path = _resolve_config_path(toolkit_root / "config", "toolkit_config")
     config = load_config(bridge_config_path, toolkit_config_path)
 
     workspace_root = repo_root / "tools" / "ms_bridge" / "workspace" / request["backend"]["manifest"]["taskId"]

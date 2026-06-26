@@ -30,3 +30,6 @@ packages = [
   "tools.ms_agent_toolkit.adapters.result_readers",
   "tools.ms_agent_toolkit.commands",
 ]
+
+[tool.setuptools.package-dir]
+"" = "../.."

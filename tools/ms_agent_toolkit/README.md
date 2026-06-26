@@ -38,6 +38,7 @@ The package metadata lives at `tools/ms_agent_toolkit/pyproject.toml`. It curren
 It also declares these console-script names:
 
 - `run_materialscript`
+- `get_gui_loop_status`
 - `prepare_gui_submission_package`
 - `read_module_result`
 - `report_next_step`
@@ -45,12 +46,24 @@ It also declares these console-script names:
 
 Practical note: this repo currently ships the local `pyproject.toml`, command modules, and package code, but not a separate polished release/install workflow beyond that. Treat the `pyproject.toml` as the source of truth for Python version, dependencies, and entrypoint names.
 
+Editable-install note:
+
+- `tools/ms_agent_toolkit/pyproject.toml` declares `package-dir = "../.."` for setuptools
+- this is required because the `pyproject.toml` file lives under `tools/ms_agent_toolkit/`, while the import packages are rooted at the repository top level under `tools.*`
+
 ## Configuration on a new machine
 
-Two JSON example files matter:
+Two config locations matter:
 
-- Bridge config: `tools/ms_bridge/config/bridge_config.example.json`
-- Toolkit config: `tools/ms_agent_toolkit/config/toolkit_config.example.json`
+- Bridge config: `tools/ms_bridge/config/bridge_config.json`
+- Toolkit config: `tools/ms_agent_toolkit/config/toolkit_config.json`
+
+Fallback behavior:
+
+- `run_materialscript` first looks for the concrete `*.json` files above
+- if they do not exist, it falls back to:
+  - `tools/ms_bridge/config/bridge_config.example.json`
+  - `tools/ms_agent_toolkit/config/toolkit_config.example.json`
 
 `tools/ms_agent_toolkit/config.py` merges values from both files into one runtime config object.
 
@@ -76,7 +89,7 @@ Fields that must be reviewed on a new machine:
 
 `RunMatScript.bat` is not included inside this repo. It comes from the local BIOVIA Materials Studio installation and is the main machine-specific setting to fix first.
 
-Update `runMatScriptBat` in `tools/ms_bridge/config/bridge_config.example.json` so it points to the real local batch file, for example:
+Update `runMatScriptBat` in `tools/ms_bridge/config/bridge_config.json` so it points to the real local batch file, for example:
 
 ```json
 "runMatScriptBat": "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\etc\\Scripting\\bin\\RunMatScript.bat"
@@ -84,7 +97,7 @@ Update `runMatScriptBat` in `tools/ms_bridge/config/bridge_config.example.json` 
 
 Also review `materialsStudioInstallRoot` to match the installed version on that machine. If those paths are wrong, the PowerShell bridge at `tools/ms_bridge/scripts/invoke_materialscript.ps1` will fail before any MaterialsScript can run.
 
-One more current-state caveat: `toolkit_config.example.json` includes `knowledgeRoot`, but this repo does not currently ship a `tools/ms_agent_toolkit/knowledge/` directory. Set that path intentionally if you add one later, or keep in mind that knowledge-pack content is not part of this delivery.
+One more current-state caveat: `toolkit_config.json` / `toolkit_config.example.json` include `knowledgeRoot`, but this repo does not currently ship a `tools/ms_agent_toolkit/knowledge/` directory. Treat that field as reserved for a later knowledge-pack delivery.
 
 ## Command entrypoints
 
@@ -94,14 +107,16 @@ These names come directly from `tools/ms_agent_toolkit/pyproject.toml`.
 
 Purpose: execute a compliant capability through either the standalone bridge path or the GUI-loop queue path and return a normalized execution result.
 
-Example:
+PowerShell-safe example:
 
 ```powershell
-run_materialscript --capability castep.energy --params-json "{\"input_xsd\":\"C:/work/model.xsd\",\"quality\":\"Fine\"}"
+$params = '{"input_xsd":"C:/work/model.xsd","quality":"Fine"}'
+run_materialscript --capability castep.energy --params-json $params
 ```
 
 ```powershell
-run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json "{\"input_xsd\":\"model.xsd\",\"quality\":\"Fine\"}"
+$params = '{"input_xsd":"model.xsd","quality":"Fine"}'
+run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json $params
 ```
 
 Current behavior in the current branch:
@@ -124,6 +139,8 @@ Important `gui_loop` precondition:
 
 - The current GUI geometry-optimization template reads `$Documents{...}` from the active Materials Studio GUI project.
 - That means the input document name passed through `--params-json` must already exist in the GUI-visible project when `--backend gui_loop` is used for `castep.geometry_optimization`.
+- The toolkit does not start the loop for you. A GUI-resident loop must already be running.
+- The currently recommended loop implementation in this repo is `tools/gateway_agent_bridge/perl/gui_loop_v2.pl`.
 
 ### `prepare_gui_submission_package`
 
@@ -143,6 +160,12 @@ Current behavior in the current branch:
 - Writes `task_manifest.json`
 - Writes a package-local `README.md`
 - Returns normalized artifact paths in the response
+
+Template note for GUI geometry optimization:
+
+- the template copies the GUI-visible source document into a separate working document through `SaveAs`
+- the named result `.xsd` is therefore intended to represent the post-submission working document, not the untouched source document
+- downstream result interpretation should still rely on the generated CASTEP result bundle, not only on the presence of the copied `.xsd`
 
 ### `read_module_result`
 
@@ -261,7 +284,7 @@ This first version does not yet include:
 
 - Result readers beyond `castep`
 - An implemented `forcite.geometry_optimization` flow
-- A shipped `tools/ms_agent_toolkit/knowledge/` directory, despite the reserved `knowledgeRoot` config field
+- A shipped `tools/ms_agent_toolkit/knowledge/` directory; `knowledgeRoot` remains a reserved config field
 - Experimental-mode command handling in the delivered CLI wrappers
 - A full MCP server package under this toolkit directory
 - Automatic startup control for the Materials Studio GUI loop itself

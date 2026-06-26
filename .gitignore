@@ -1,6 +1,8 @@
 __pycache__/
 *.pyc
 .venv/
+*.egg-info/
+tools/ms_agent_toolkit/workspace/
 
 tools/gui_loop_queue/
 tools/ms_bridge/workspace/

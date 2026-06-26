@@ -49,7 +49,9 @@ def write_gui_package(
         shutil.copy2(input_path, copied_xsd)
 
     template_path = resolve_template_path(template_root, capability["template_id"])
-    rendered = render_template(template_path, parameters)
+    render_parameters = dict(parameters)
+    render_parameters.setdefault("input_xsd", copied_xsd.name)
+    rendered = render_template(template_path, render_parameters)
     pl_path = output_dir_path / "job.pl"
     pl_path.write_text(rendered, encoding="utf-8")
 

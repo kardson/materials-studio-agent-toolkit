@@ -16,6 +16,20 @@ It is designed for the case where an agent shares a machine or workspace with a 
 
 This repository does **not** expose an MCP server. The current delivery is a lightweight CLI toolkit plus a generic `SKILL.md`.
 
+What is real today:
+
+- real script rendering
+- real standalone execution
+- real GUI-loop queue handoff
+- real result parsing
+- real round-report generation for next-step decisions
+- real local publication into project documents
+
+What this is not:
+
+- not an MCP server
+- not a self-starting GUI loop supervisor
+
 ### What this repository contains
 
 #### Core toolkit
@@ -100,23 +114,29 @@ From the repository root:
 py -3.12 -m pip install -e .\tools\ms_agent_toolkit
 ```
 
+This command is expected to work directly from the checked-out repo. The package metadata in `tools/ms_agent_toolkit/pyproject.toml` is rooted back to the repository top-level so editable install resolves the `tools.*` packages correctly.
+
 #### Main commands
 
 Declared console entrypoints:
 
 - `run_materialscript`
+- `get_gui_loop_status`
 - `prepare_gui_submission_package`
 - `read_module_result`
+- `report_next_step`
 - `publish_to_project_documents`
 
-Example usage:
+PowerShell-safe examples:
 
 ```powershell
-run_materialscript --capability castep.energy --params-json "{\"input_xsd\":\"C:/work/model.xsd\",\"quality\":\"Fine\"}"
+$params = '{"input_xsd":"C:/work/model.xsd","quality":"Fine"}'
+run_materialscript --capability castep.energy --params-json $params
 ```
 
 ```powershell
-run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json "{\"input_xsd\":\"model.xsd\",\"quality\":\"Fine\"}"
+$params = '{"input_xsd":"model.xsd","quality":"Fine"}'
+run_materialscript --backend gui_loop --capability castep.geometry_optimization --params-json $params
 ```
 
 ```powershell
@@ -125,6 +145,10 @@ prepare_gui_submission_package --capability castep.geometry_optimization --input
 
 ```powershell
 read_module_result --module castep --result-dir C:/work/job42
+```
+
+```powershell
+report_next_step --module castep --result-dir C:/work/job42
 ```
 
 ```powershell
@@ -137,8 +161,13 @@ This repo does **not** bundle `RunMatScript.bat`. That comes from the local Mate
 
 Before using backend execution paths, review:
 
-- `tools/ms_bridge/config/bridge_config.example.json`
-- `tools/ms_agent_toolkit/config/toolkit_config.example.json`
+- `tools/ms_bridge/config/bridge_config.json`
+- `tools/ms_agent_toolkit/config/toolkit_config.json`
+
+Fallback behavior:
+
+- `run_materialscript` prefers `bridge_config.json` and `toolkit_config.json`
+- if a concrete file is missing, it falls back to the matching `*.example.json`
 
 In particular, fix:
 
@@ -152,6 +181,12 @@ In particular, fix:
 If `runMatScriptBat` is wrong, the toolkit cannot launch MaterialsScript through the existing bridge.
 
 For `gui_loop` execution, also review `guiLoopQueueRoot` in `tools/ms_agent_toolkit/config/toolkit_config.example.json`. In the current delivery it points at the isolated repo queue under `C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\gui_loop_queue`, not at the scientific workspace.
+
+Current `gui_loop` preconditions:
+
+- a Materials Studio GUI-resident loop must already be running
+- the queue root must point at the intended queue directory
+- the current recommended loop implementation is the `gui_loop_v2.pl` script already shipped in `tools/gateway_agent_bridge/perl/`
 
 ### How to give this to another agent
 
@@ -179,7 +214,7 @@ This first version does not yet include:
 - an MCP server
 - non-CASTEP result readers
 - a completed Forcite execution path
-- a shipped `tools/ms_agent_toolkit/knowledge/` directory
+- a shipped `tools/ms_agent_toolkit/knowledge/` directory; `knowledgeRoot` is currently a reserved config field only
 - experimental-mode command implementations in the delivered CLI wrappers
 - automatic startup control for the Materials Studio GUI loop
 
