@@ -46,9 +46,28 @@ class CapabilityRegistryTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.registry.get("..\\outside")
 
-    def test_registry_reports_reserved_capability(self) -> None:
+    def test_registry_reports_definition_pending_forcite_geometry_optimization(self) -> None:
         card = self.registry.get("forcite.geometry_optimization")
-        self.assertEqual(card["status"], "reserved")
+        self.assertEqual(card["supported_execution_modes"], [])
+        self.assertIn("execution remains pending", card["notes"])
+
+    def test_registry_loads_definition_complete_forcite_geometry_optimization_card(self) -> None:
+        card = self.registry.get("forcite.geometry_optimization")
+        for field in (
+            "capability_id",
+            "module",
+            "task",
+            "official_api_signature",
+            "official_doc_refs",
+            "official_example_refs",
+            "template_id",
+            "allowed_parameters",
+            "required_inputs",
+            "result_reader",
+            "supported_execution_modes",
+            "notes",
+        ):
+            self.assertIn(field, card)
 
 
 if __name__ == "__main__":
