@@ -102,6 +102,12 @@ One more current-state note: `toolkit_config.json` / `toolkit_config.example.jso
 That tree is curated from official Materials Studio docs and examples, and it helps the toolkit keep capability definitions and generated scripts aligned with the shipped API surface.
 It supports better definition and script correctness, but it does not by itself make the toolkit a fully automatic execution engine.
 
+If a needed module knowledge pack or capability card is still missing, use:
+
+- `tools/ms_agent_toolkit/knowledge/capability_completion_guide.md`
+
+That guide explains how to extend the toolkit from the local official Materials Studio installation instead of inventing new capabilities from memory.
+
 ## Command entrypoints
 
 These names come directly from `tools/ms_agent_toolkit/pyproject.toml`.
@@ -274,6 +280,24 @@ Current cards in this delivery:
 - `forcite.geometry_optimization.json`
 
 Current-state detail: `forcite.geometry_optimization.json` is definition-complete, but the actual execution path is still not shipped in this release.
+
+## Extending Missing Knowledge And Capabilities
+
+When the toolkit does not already ship the module knowledge or capability you need:
+
+1. use the local official Materials Studio installation as the source of truth
+2. build or update the knowledge files first
+3. build or update the capability card second
+4. only then promote it toward template-approved or execution-ready status
+
+Preferred source roots:
+
+- `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc`
+- `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\Examples`
+
+The repo-local guide for this workflow is:
+
+- `tools/ms_agent_toolkit/knowledge/capability_completion_guide.md`
 
 Templates live in:
 

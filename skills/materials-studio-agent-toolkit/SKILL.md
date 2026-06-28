@@ -10,6 +10,22 @@ Use this toolkit when you need to generate `MaterialsScript`, package formal GUI
 2. Use compliant mode when a capability exists.
 3. Use experimental mode only when no approved capability fits.
 
+## Missing Capability Or Knowledge
+
+1. If the needed module knowledge or capability is missing, do not improvise from memory first.
+2. Ask the user to provide the local official Materials Studio source roots when needed:
+   - `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc`
+   - `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\Examples`
+3. Complete the missing pieces in this order:
+   - knowledge
+   - capability definition
+   - template
+   - execution wiring
+   - result reading
+4. A capability may be definition-complete without being execution-ready.
+5. Keep `supported_execution_modes` empty until template, execution mode, result interpretation, and tests all exist.
+6. Use `tools/ms_agent_toolkit/knowledge/capability_completion_guide.md` as the operating guide for this fallback workflow.
+
 ## Compliant Path
 
 1. Select a capability.

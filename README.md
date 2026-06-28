@@ -197,6 +197,10 @@ For `gui_loop` execution, also review `guiLoopQueueRoot` in `tools/ms_agent_tool
 
 The shipped `tools/ms_agent_toolkit/knowledge/` tree is a curated set of official docs and examples. It is there so the toolkit can keep capability definitions, parameter guidance, and generated scripts aligned with the Materials Studio surface that is actually delivered in this repo.
 
+If a required module knowledge pack or capability is missing, the intended extension path is to let the agent complete it from the local official Materials Studio installation sources rather than inventing it from memory. The repo-local guide for that workflow is:
+
+- `tools/ms_agent_toolkit/knowledge/capability_completion_guide.md`
+
 Current `gui_loop` preconditions:
 
 - a Materials Studio GUI-resident loop must already be running
