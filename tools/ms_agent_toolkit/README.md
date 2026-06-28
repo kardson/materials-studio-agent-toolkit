@@ -314,7 +314,7 @@ This first version does not yet include:
 
 - Result readers beyond `castep`
 - An implemented `forcite.geometry_optimization` flow
-- A shipped `tools/ms_agent_toolkit/knowledge/` directory that is delivered and used for capability and script guidance
+- Additional `tools/ms_agent_toolkit/knowledge/` expansion beyond the shipped guidance tree
 - Experimental-mode command handling in the delivered CLI wrappers
 - A full MCP server package under this toolkit directory
 - Automatic startup control for the Materials Studio GUI loop itself

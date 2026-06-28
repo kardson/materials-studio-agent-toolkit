@@ -75,7 +75,7 @@ The current release includes:
 - static capability cards for:
   - `castep.energy`
   - `castep.geometry_optimization`
-  - definition-complete `forcite.geometry_optimization`
+  - `forcite.geometry_optimization` now definition-complete, while execution remains out of scope for this release
 - first-release templates for:
   - standalone CASTEP energy
   - GUI CASTEP geometry optimization
@@ -229,7 +229,6 @@ This first version does not yet include:
 - an MCP server
 - non-CASTEP result readers
 - a completed Forcite execution path
-- a shipped `tools/ms_agent_toolkit/knowledge/` directory that is delivered and used for capability and script guidance
 - experimental-mode command implementations in the delivered CLI wrappers
 - automatic startup control for the Materials Studio GUI loop
 
@@ -299,7 +298,7 @@ agent 用的通用 skill 在：
 - 三张 capability card：
   - `castep.energy`
   - `castep.geometry_optimization`
-  - 预留的 `forcite.geometry_optimization`
+  - 已定义完成的 `forcite.geometry_optimization`
 - 两个首发模板：
   - standalone CASTEP energy
   - GUI CASTEP geometry optimization
@@ -405,7 +404,7 @@ publish_to_project_documents --source-path C:/work/job42/output.xcd --source-pat
 - 完整的一键式执行编排器
 - 非 CASTEP 的结果读取器
 - 已实现的 Forcite 正式执行路径
-- 已交付的 `tools/ms_agent_toolkit/knowledge/` 目录
+  - 已交付的 `tools/ms_agent_toolkit/knowledge/` 目录
 - 当前 CLI wrapper 中真正实现的 experimental-mode 路径
 
 如果你需要低层 backend 执行行为，请继续直接查看和复用 `tools/ms_bridge/`。
