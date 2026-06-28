@@ -1,5 +1,4 @@
 import json
-import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -12,13 +11,9 @@ class GetGuiLoopStatusTests(unittest.TestCase):
         self.temp_dir = tempfile.TemporaryDirectory()
         self.root = Path(self.temp_dir.name) / "gui_loop_status"
         self.queue_root = self.root / "queue"
-        if self.root.exists():
-            shutil.rmtree(self.root)
         (self.queue_root / "logs").mkdir(parents=True, exist_ok=True)
 
     def tearDown(self) -> None:
-        if self.root.exists():
-            shutil.rmtree(self.root)
         self.temp_dir.cleanup()
 
     def test_get_status_returns_failed_state_from_status_json(self) -> None:

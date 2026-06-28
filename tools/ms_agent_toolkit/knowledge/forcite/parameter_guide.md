@@ -1,9 +1,9 @@
 # Forcite Parameter Guide
 
 ## Scope
-Use the 24.1 Forcite scripting pages such as `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\content\scripting\forcitescripting\apiforcitegeometryoptimization.htm` and `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\content\scripting\forcitescripting\apiforcite.htm` together with the broader help portal at `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\MaterialsStudio.htm`.
+Use the 24.1 Forcite scripting references such as `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\content\scripting\forcitescripting\apiforcite.htm` and `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\content\scripting\forcitescripting\apiforcitegeometryoptimization.htm`, with `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\MaterialsStudio.htm` as the index back into related help topics.
 
 ## Summary
-Forcite setup decisions are easiest to reason about in three buckets: forcefield selection, geometry or dynamics controls, and requested properties. The geometry optimization entry point is where you confirm optimization-specific settings and acceptable parameter names, while the broader `apiforcite.htm` page is the better anchor for shared module behavior such as constructing settings blocks and choosing task families.
+Forcite parameters are easiest to curate in three groups: forcefield selection, task controls, and requested outputs. `apiforcite.htm` is the shared reference for module-level behavior and settings construction, while the geometry-optimization page is where you verify optimization-specific names, accepted values, and which controls are actually legal for that task.
 
-When curating agent guidance, prefer short reminders over raw option dumps: verify that the forcefield is compatible with the document contents, keep convergence or quality settings explicit in the script payload, and request only the properties you plan to read back. The official 24.1 pages above are the source of truth for exact identifiers, but the agent summary should stay focused on decision support rather than mirroring help text.
+For agent use, the main safeguards are to choose a forcefield that matches the system, keep convergence or quality controls explicit in the payload, and request only properties that will be consumed after the run. The official 24.1 pages remain the source of truth for exact identifiers, but this guide should emphasize operator decisions and validation checkpoints rather than copying raw option tables.

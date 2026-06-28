@@ -1,9 +1,9 @@
 # CASTEP Example Index
 
 ## Scope
-Use `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\Examples\Projects\CASTEP\Fe_phonons.stp` and `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\Examples\Projects\CASTEP\l_alanine.stp` as the starting references for CASTEP workflows.
+The shipped 24.1 CASTEP examples under `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\Examples\Projects\CASTEP\` are the fastest way to inspect known-good study layouts, generated files, and result naming.
 
 ## Summary
-`Fe_phonons.stp` is the best compact reference when you need a known-good CASTEP project that exercises task setup, submission, and post-run inspection for vibrational data. Start there when checking how a study organizes inputs, generated subdirectories, and phonon-oriented outputs after execution.
+`Fe_phonons.stp` is the most compact reference for a complete phonon workflow: it shows how a CASTEP study stores structure inputs, calculation settings, and the downstream files associated with vibrational analysis. It is the right first check when you need to understand what a successful multi-step CASTEP study leaves behind.
 
-`l_alanine.stp` is the more useful sanity check for organic or molecular-style geometry work because it shows a less symmetric system and a broader set of convergence-sensitive settings. Pair these projects with the 24.1 CASTEP scripting pages and inspect them for naming conventions, expected study contents, and the minimum result files worth surfacing to downstream readers.
+`l_alanine.stp` is a better comparison point for molecular or low-symmetry systems because it exercises a more chemistry-oriented structure and a settings mix that is sensitive to convergence choices. Use these example projects together with the 24.1 CASTEP scripting help to confirm study naming conventions, expected result bundle contents, and which output artifacts are stable enough for downstream readers to rely on.

@@ -1,5 +1,4 @@
 import json
-import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,12 +12,8 @@ class EnqueueGuiLoopRunnerTests(unittest.TestCase):
         self.root = Path(self.temp_dir.name) / "gui_loop"
         self.queue_root = self.root / "queue"
         self.workspace_root = self.root / "workspace"
-        if self.root.exists():
-            shutil.rmtree(self.root)
 
     def tearDown(self) -> None:
-        if self.root.exists():
-            shutil.rmtree(self.root)
         self.temp_dir.cleanup()
 
     def test_enqueue_gui_loop_job_writes_workspace_artifacts_and_pending_script(self) -> None:
