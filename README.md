@@ -75,7 +75,7 @@ The current release includes:
 - static capability cards for:
   - `castep.energy`
   - `castep.geometry_optimization`
-  - reserved `forcite.geometry_optimization`
+  - definition-complete `forcite.geometry_optimization`
 - first-release templates for:
   - standalone CASTEP energy
   - GUI CASTEP geometry optimization
@@ -195,6 +195,8 @@ If `runMatScriptBat` is wrong, the toolkit cannot launch MaterialsScript through
 
 For `gui_loop` execution, also review `guiLoopQueueRoot` in `tools/ms_agent_toolkit/config/toolkit_config.example.json`. In the current delivery it points at the isolated repo queue under `C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\gui_loop_queue`, not at the scientific workspace.
 
+The shipped `tools/ms_agent_toolkit/knowledge/` tree is a curated set of official docs and examples. It is there so the toolkit can keep capability definitions, parameter guidance, and generated scripts aligned with the Materials Studio surface that is actually delivered in this repo.
+
 Current `gui_loop` preconditions:
 
 - a Materials Studio GUI-resident loop must already be running
@@ -227,7 +229,7 @@ This first version does not yet include:
 - an MCP server
 - non-CASTEP result readers
 - a completed Forcite execution path
-- a shipped `tools/ms_agent_toolkit/knowledge/` directory; `knowledgeRoot` is currently a reserved config field only
+- a shipped `tools/ms_agent_toolkit/knowledge/` directory that is delivered and used for capability and script guidance
 - experimental-mode command implementations in the delivered CLI wrappers
 - automatic startup control for the Materials Studio GUI loop
 

@@ -98,7 +98,9 @@ Update `runMatScriptBat` in `tools/ms_bridge/config/bridge_config.json` so it po
 
 Also review `materialsStudioInstallRoot` to match the installed version on that machine. If those paths are wrong, the PowerShell bridge at `tools/ms_bridge/scripts/invoke_materialscript.ps1` will fail before any MaterialsScript can run.
 
-One more current-state caveat: `toolkit_config.json` / `toolkit_config.example.json` include `knowledgeRoot`, but this repo does not currently ship a `tools/ms_agent_toolkit/knowledge/` directory. Treat that field as reserved for a later knowledge-pack delivery.
+One more current-state note: `toolkit_config.json` / `toolkit_config.example.json` include `knowledgeRoot`, and this repo now ships `tools/ms_agent_toolkit/knowledge/` as a real delivered path.
+That tree is curated from official Materials Studio docs and examples, and it helps the toolkit keep capability definitions and generated scripts aligned with the shipped API surface.
+It supports better definition and script correctness, but it does not by itself make the toolkit a fully automatic execution engine.
 
 ## Command entrypoints
 
@@ -271,7 +273,7 @@ Current cards in this delivery:
 - `castep.geometry_optimization.json`
 - `forcite.geometry_optimization.json`
 
-Current-state detail: `forcite.geometry_optimization.json` is only a reserved placeholder with `status: "reserved"` and no supported execution modes yet.
+Current-state detail: `forcite.geometry_optimization.json` is definition-complete, but the actual execution path is still not shipped in this release.
 
 Templates live in:
 
@@ -312,7 +314,7 @@ This first version does not yet include:
 
 - Result readers beyond `castep`
 - An implemented `forcite.geometry_optimization` flow
-- A shipped `tools/ms_agent_toolkit/knowledge/` directory; `knowledgeRoot` remains a reserved config field
+- A shipped `tools/ms_agent_toolkit/knowledge/` directory that is delivered and used for capability and script guidance
 - Experimental-mode command handling in the delivered CLI wrappers
 - A full MCP server package under this toolkit directory
 - Automatic startup control for the Materials Studio GUI loop itself
