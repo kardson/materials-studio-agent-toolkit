@@ -1,5 +1,6 @@
 import json
 import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -8,9 +9,8 @@ from tools.ms_agent_toolkit.commands.get_gui_loop_status import get_status
 
 class GetGuiLoopStatusTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.root = Path(
-            r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\tests\_gui_loop_status"
-        )
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp_dir.name) / "gui_loop_status"
         self.queue_root = self.root / "queue"
         if self.root.exists():
             shutil.rmtree(self.root)
@@ -19,6 +19,7 @@ class GetGuiLoopStatusTests(unittest.TestCase):
     def tearDown(self) -> None:
         if self.root.exists():
             shutil.rmtree(self.root)
+        self.temp_dir.cleanup()
 
     def test_get_status_returns_failed_state_from_status_json(self) -> None:
         (self.queue_root / "logs" / "job42.pl.status.json").write_text(

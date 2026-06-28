@@ -1,5 +1,6 @@
 import json
 import shutil
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -28,12 +29,11 @@ class BuildGuiManifestTests(unittest.TestCase):
         self.assertEqual(result["capabilityId"], "castep.geometry_optimization")
 
     def test_write_gui_package_materializes_expected_files(self) -> None:
-        output_dir = Path(r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\tests\_gui_package")
-        if output_dir.exists():
-            shutil.rmtree(output_dir)
-        input_xsd = output_dir.parent / "input.xsd"
-        input_xsd.write_text("dummy xsd", encoding="utf-8")
-        try:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            output_dir = root / "gui_package"
+            input_xsd = root / "input.xsd"
+            input_xsd.write_text("dummy xsd", encoding="utf-8")
             result = write_gui_package(
                 capability_id="castep.geometry_optimization",
                 input_xsd=str(input_xsd),
@@ -46,19 +46,13 @@ class BuildGuiManifestTests(unittest.TestCase):
             self.assertTrue((output_dir / "task_manifest.json").exists())
             self.assertTrue((output_dir / "README.md").exists())
             self.assertEqual(result["stage"], "script_generated")
-        finally:
-            if input_xsd.exists():
-                input_xsd.unlink()
-            if output_dir.exists():
-                shutil.rmtree(output_dir)
 
     def test_write_gui_package_injects_copied_input_name_when_parameters_omit_input_xsd(self) -> None:
-        output_dir = Path(r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\tests\_gui_package")
-        if output_dir.exists():
-            shutil.rmtree(output_dir)
-        input_xsd = output_dir.parent / "source_model.xsd"
-        input_xsd.write_text("dummy xsd", encoding="utf-8")
-        try:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            output_dir = root / "gui_package"
+            input_xsd = root / "source_model.xsd"
+            input_xsd.write_text("dummy xsd", encoding="utf-8")
             result = write_gui_package(
                 capability_id="castep.geometry_optimization",
                 input_xsd=str(input_xsd),
@@ -70,11 +64,6 @@ class BuildGuiManifestTests(unittest.TestCase):
             script_text = (output_dir / "job.pl").read_text(encoding="utf-8")
             self.assertIn("source_model.xsd", script_text)
             self.assertEqual(result["stage"], "script_generated")
-        finally:
-            if input_xsd.exists():
-                input_xsd.unlink()
-            if output_dir.exists():
-                shutil.rmtree(output_dir)
 
 
 if __name__ == "__main__":

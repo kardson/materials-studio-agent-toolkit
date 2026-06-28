@@ -1,5 +1,6 @@
 import json
 import shutil
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -8,9 +9,8 @@ from tools.ms_agent_toolkit.adapters.gui_loop_runner import enqueue_gui_loop_job
 
 class EnqueueGuiLoopRunnerTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.root = Path(
-            r"C:\Users\kards\Documents\DFT_materials_studio_mcp_m1\tools\ms_agent_toolkit\tests\_gui_loop"
-        )
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp_dir.name) / "gui_loop"
         self.queue_root = self.root / "queue"
         self.workspace_root = self.root / "workspace"
         if self.root.exists():
@@ -19,6 +19,7 @@ class EnqueueGuiLoopRunnerTests(unittest.TestCase):
     def tearDown(self) -> None:
         if self.root.exists():
             shutil.rmtree(self.root)
+        self.temp_dir.cleanup()
 
     def test_enqueue_gui_loop_job_writes_workspace_artifacts_and_pending_script(self) -> None:
         result = enqueue_gui_loop_job(
