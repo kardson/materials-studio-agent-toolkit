@@ -127,6 +127,21 @@ class BuildCompliantRequestTests(unittest.TestCase):
         self.assertEqual(request["parameters"]["input_xsd"], "model.xsd")
         self.assertEqual(request["backend"]["manifest"]["inputDocument"], "C:/work/model.xsd")
 
+    def test_run_compliant_request_rejects_capability_without_supported_execution_modes(self) -> None:
+        with patch(
+            "tools.ms_agent_toolkit.commands.run_materialscript.resolve_template_path"
+        ) as resolve_template_path_mock:
+            with self.assertRaisesRegex(
+                ValueError,
+                "forcite\\.geometry_optimization is not execution-ready or approved",
+            ):
+                run_compliant_request(
+                    capability_id="forcite.geometry_optimization",
+                    params_json=json.dumps({"input_xsd": "model.xsd", "quality": "Fine"}),
+                )
+
+        resolve_template_path_mock.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

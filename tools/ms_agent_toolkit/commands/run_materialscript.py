@@ -15,10 +15,21 @@ from tools.ms_agent_toolkit.config import load_config, resolve_config_path
 from tools.ms_agent_toolkit.templates import render_template, resolve_template_path
 
 
+def ensure_execution_ready(capability: dict, backend: str) -> None:
+    supported_execution_modes = capability.get("supported_execution_modes", [])
+    if backend not in supported_execution_modes:
+        raise ValueError(
+            f"{capability['capability_id']} is not execution-ready or approved for backend "
+            f"'{backend}'; supported execution modes: {supported_execution_modes or 'none'}."
+        )
+
+
 def build_compliant_request(capability_id: str, params_json: str, backend: str = "standalone") -> dict:
     parameters = load_params_payload(params_json=params_json, params_file=None)
     registry = CapabilityRegistry(Path(__file__).resolve().parents[1] / "capabilities")
     capability = registry.get(capability_id)
+    execution_mode = "compliant"
+    ensure_execution_ready(capability, execution_mode)
     unsupported = sorted(set(parameters) - set(capability["allowed_parameters"]))
     if unsupported:
         raise ValueError(f"Unsupported parameters for {capability_id}: {', '.join(unsupported)}")
