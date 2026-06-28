@@ -10,7 +10,7 @@
     "tools/ms_bridge/materials/templates/submit_castep_template.pl"
   ],
   "template_id": "castep.energy.basic",
-  "allowed_parameters": ["input_xsd", "quality"],
+  "allowed_parameters": ["input_xsd", "quality", "cutoff_energy", "kpoint_grid"],
   "required_inputs": ["input_xsd"],
   "result_reader": "castep",
   "supported_execution_modes": ["compliant"],

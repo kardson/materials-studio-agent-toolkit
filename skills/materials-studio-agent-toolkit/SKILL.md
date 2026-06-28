@@ -40,3 +40,27 @@ Use this toolkit when you need to generate `MaterialsScript`, package formal GUI
 2. Use `analysis.summary` as the structured one-paragraph conclusion for the current run.
 3. Use `analysis.nextStepOptions` as the shortlist of next execution plans for the human to choose from.
 4. Do not treat the toolkit as a scientific decision engine; it prepares structured evidence for the agent.
+
+## Command Examples
+
+```powershell
+ms_agent_toolkit_doctor
+```
+
+```powershell
+$params = '{"input_xsd":"C:/work/model.xsd","quality":"Fine","cutoff_energy":"450 eV","kpoint_grid":"2 2 2"}'
+run_materialscript --capability castep.energy --params-json $params
+```
+
+```powershell
+run_materialscript --capability castep.energy --params-file C:/work/params.json
+```
+
+```powershell
+read_module_result --module castep --result-dir C:/work/job42
+report_next_step --module castep --result-dir C:/work/job42
+```
+
+```powershell
+publish_to_project_documents --source-path C:/work/job42/output.xcd --source-path C:/work/job42/report.txt --project-documents-root C:/Projects/MyProject/Documents
+```

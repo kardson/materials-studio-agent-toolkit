@@ -14,6 +14,8 @@ class CapabilityRegistryTests(unittest.TestCase):
         self.assertEqual(card["module"], "CASTEP")
         self.assertEqual(card["result_reader"], "castep")
         self.assertEqual(card["supported_execution_modes"], ["compliant"])
+        self.assertIn("cutoff_energy", card["allowed_parameters"])
+        self.assertIn("kpoint_grid", card["allowed_parameters"])
         self.assertEqual(
             card["official_example_refs"],
             ["tools/ms_bridge/materials/templates/submit_castep_template.pl"],

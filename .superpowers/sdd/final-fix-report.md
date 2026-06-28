@@ -72,3 +72,69 @@ FAILED (errors=6)
 ## Notes
 - The targeted regression test and the updated knowledge-layout module both pass.
 - The required full toolkit run was executed once and is currently blocked by existing write-permission assumptions in unrelated tests that materialize files under `tools/ms_agent_toolkit/tests`.
+
+# Final Checkpoint Hardening Pass Update - 2026-06-28
+
+## Scope
+- Verified the runtime gate remains in `tools/ms_agent_toolkit.commands.run_materialscript` and that non-execution-ready capabilities are rejected before template resolution.
+- Kept the focused regression coverage in `tools/ms_agent_toolkit.tests.test_run_materialscript_contract`.
+- Replaced scaffold-style text in the three flagged knowledge files with concise Materials Studio 24.1-based summaries.
+- Moved the write-heavy toolkit tests to self-cleaning temp-managed locations instead of repo test directories.
+
+## Verification
+
+### Focused run_materialscript regression
+Command:
+```powershell
+python -m unittest tools.ms_agent_toolkit.tests.test_run_materialscript_contract.BuildCompliantRequestTests.test_run_compliant_request_rejects_capability_without_supported_execution_modes
+```
+Output:
+```text
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+```
+
+### Knowledge layout module
+Command:
+```powershell
+python -m unittest tools.ms_agent_toolkit.tests.test_knowledge_layout
+```
+Output:
+```text
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK
+```
+
+### Full toolkit suite
+Command:
+```powershell
+python -m unittest discover -s tools/ms_agent_toolkit/tests
+```
+Output:
+```text
+..................................
+----------------------------------------------------------------------
+Ran 34 tests in 0.056s
+
+OK
+```
+
+### Full bridge suite
+Command:
+```powershell
+python -m unittest discover -s tools/ms_bridge/tests
+```
+Output:
+```text
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
+```

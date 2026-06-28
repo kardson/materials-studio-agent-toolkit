@@ -41,6 +41,21 @@ class KnowledgeConfigTests(unittest.TestCase):
         data = json.loads(config_path.read_text(encoding="utf-8"))
         self.assertTrue(Path(data["knowledgeRoot"]).is_dir())
 
+    def test_castep_core_knowledge_files_contain_actionable_guidance(self) -> None:
+        root = Path(__file__).resolve().parents[1] / "knowledge" / "castep"
+        api_summary = (root / "api_summary.md").read_text(encoding="utf-8")
+        parameter_guide = (root / "parameter_guide.md").read_text(encoding="utf-8")
+        result_semantics = (root / "result_semantics.md").read_text(encoding="utf-8")
+
+        self.assertIn("Modules->CASTEP->Energy->Run", api_summary)
+        self.assertIn("Modules->CASTEP->GeometryOptimization->Run", api_summary)
+        self.assertIn("Quality", parameter_guide)
+        self.assertIn("cutoff", parameter_guide.lower())
+        self.assertIn("k-point", parameter_guide.lower())
+        self.assertIn(".castep", result_semantics)
+        self.assertIn(".param", result_semantics)
+        self.assertIn("final energy", result_semantics.lower())
+
 
 if __name__ == "__main__":
     unittest.main()
