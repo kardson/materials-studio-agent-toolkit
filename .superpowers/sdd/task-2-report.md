@@ -29,9 +29,14 @@ The execution surface remains intentionally unavailable:
 - Full suite: `& '.\.venv\Scripts\python.exe' -m unittest discover -s tools/ms_agent_toolkit/tests -v`
   - Ran once, but unrelated existing tests errored in this environment on workspace write permissions and missing writable temp directories under `tools/ms_agent_toolkit/tests/_gui_loop*`, `tools/ms_agent_toolkit/tests/_publish`, and direct writes to `tools/ms_agent_toolkit/tests/*.xsd`.
 
+## Review Fix Verification
+- Focused capability slice: `& '.\.venv\Scripts\python.exe' -m unittest tools.ms_agent_toolkit.tests.test_capabilities -v`
+  - Passed after strengthening the Forcite assertions to pin the module, task, reader, exact doc/example refs, empty execution modes, and the non-runnable note.
+- Full suite: `& '.\.venv\Scripts\python.exe' -m unittest discover -s tools/ms_agent_toolkit/tests -v`
+  - Ran once again and hit the same unrelated permission errors in GUI/publication tests as before.
+
 ## Notes
 The Forcite references used in the card were taken from the local Materials Studio 24.1 help/example paths already present in the repository:
 - `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\content\scripting\forcitescripting\apiforcite.htm`
 - `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\doc\content\scripting\forcitescripting\apiforcitegeometryoptimization.htm`
 - `C:\Program Files (x86)\BIOVIA\Materials Studio 24.1\share\Examples\Projects\Forcite\SolvationFreeEnergy.stp`
-

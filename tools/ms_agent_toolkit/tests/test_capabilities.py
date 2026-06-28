@@ -48,8 +48,27 @@ class CapabilityRegistryTests(unittest.TestCase):
 
     def test_registry_reports_definition_pending_forcite_geometry_optimization(self) -> None:
         card = self.registry.get("forcite.geometry_optimization")
+        self.assertEqual(card["module"], "Forcite")
+        self.assertEqual(card["task"], "GeometryOptimization")
+        self.assertEqual(card["result_reader"], "forcite")
+        self.assertEqual(
+            card["official_doc_refs"],
+            [
+                "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\share\\doc\\content\\scripting\\forcitescripting\\apiforcite.htm",
+                "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\share\\doc\\content\\scripting\\forcitescripting\\apiforcitegeometryoptimization.htm",
+            ],
+        )
+        self.assertEqual(
+            card["official_example_refs"],
+            [
+                "C:\\Program Files (x86)\\BIOVIA\\Materials Studio 24.1\\share\\Examples\\Projects\\Forcite\\SolvationFreeEnergy.stp",
+            ],
+        )
         self.assertEqual(card["supported_execution_modes"], [])
-        self.assertIn("execution remains pending", card["notes"])
+        self.assertEqual(
+            card["notes"],
+            "Definition-complete only; no template is shipped, execution remains pending, and execution is not approved in this phase.",
+        )
 
     def test_registry_loads_definition_complete_forcite_geometry_optimization_card(self) -> None:
         card = self.registry.get("forcite.geometry_optimization")

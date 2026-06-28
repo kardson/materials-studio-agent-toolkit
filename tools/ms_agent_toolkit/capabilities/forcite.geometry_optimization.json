@@ -15,5 +15,5 @@
   "required_inputs": ["input_xsd"],
   "result_reader": "forcite",
   "supported_execution_modes": [],
-  "notes": "Definition-complete only; execution remains pending and is not approved in this phase."
+  "notes": "Definition-complete only; no template is shipped, execution remains pending, and execution is not approved in this phase."
 }
