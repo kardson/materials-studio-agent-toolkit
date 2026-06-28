@@ -404,7 +404,6 @@ publish_to_project_documents --source-path C:/work/job42/output.xcd --source-pat
 - 完整的一键式执行编排器
 - 非 CASTEP 的结果读取器
 - 已实现的 Forcite 正式执行路径
-  - 已交付的 `tools/ms_agent_toolkit/knowledge/` 目录
 - 当前 CLI wrapper 中真正实现的 experimental-mode 路径
 
 如果你需要低层 backend 执行行为，请继续直接查看和复用 `tools/ms_bridge/`。

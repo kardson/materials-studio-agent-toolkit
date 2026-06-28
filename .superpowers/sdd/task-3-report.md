@@ -40,3 +40,6 @@ The test coverage now includes a config-level assertion that the example `knowle
 - Focused verification:
   - `& '.\\.venv\\Scripts\\python.exe' -m unittest tools.ms_agent_toolkit.tests.test_knowledge_layout.KnowledgeConfigTests.test_example_config_points_to_existing_shipped_knowledge_directory -v`
   - Passed.
+
+## Final Scope Pass
+- Removed the remaining nested Chinese bullet that still placed `tools/ms_agent_toolkit/knowledge/` under the "not included yet" list.
