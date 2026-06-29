@@ -21,7 +21,7 @@ class ToolkitConfig:
 
 
 def _read_json(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def resolve_config_path(config_dir: Path, base_name: str) -> Path:

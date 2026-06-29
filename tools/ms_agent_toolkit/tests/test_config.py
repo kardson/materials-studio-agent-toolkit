@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+import tempfile
 
 from tools.ms_agent_toolkit.config import load_config, resolve_config_path
 
@@ -80,6 +81,24 @@ class LoadConfigTests(unittest.TestCase):
         self.assertEqual(config.gui_loop_queue_root, "C:/tmp/gui_loop_queue")
         self.assertEqual(config.gui_loop_poll_seconds, 2)
         self.assertEqual(config.gui_loop_default_wait_seconds, 60)
+
+    def test_load_config_accepts_utf8_bom_prefixed_json_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            bridge = temp_root / "bridge.json"
+            toolkit = temp_root / "toolkit.json"
+            bridge.write_text(
+                '{"runMatScriptBat":"C:/MS/RunMatScript.bat","workspaceRoot":"C:/tmp/ms_bridge_workspace","defaultProjectDocumentsRoot":"C:/tmp/projects","defaultTimeoutSeconds":1800}',
+                encoding="utf-8-sig",
+            )
+            toolkit.write_text(
+                '{"capabilityRegistryPath":"C:/tmp/capabilities","templatesRoot":"C:/tmp/templates","knowledgeRoot":"C:/tmp/knowledge","experimentalAuditRoot":"C:/tmp/audit"}',
+                encoding="utf-8-sig",
+            )
+            config = load_config(bridge, toolkit)
+
+        self.assertEqual(config.run_mat_script_bat, "C:/MS/RunMatScript.bat")
+        self.assertEqual(config.capability_registry_path, "C:/tmp/capabilities")
 
 
 if __name__ == "__main__":
