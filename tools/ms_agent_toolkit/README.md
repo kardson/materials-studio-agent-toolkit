@@ -154,7 +154,7 @@ Important `gui_loop` precondition:
 - The current GUI geometry-optimization template reads `$Documents{...}` from the active Materials Studio GUI project.
 - That means the input document name passed through `--params-json` must already exist in the GUI-visible project when `--backend gui_loop` is used for `castep.geometry_optimization`.
 - The toolkit does not start the loop for you. A GUI-resident loop must already be running.
-- The currently recommended loop implementation in this repo is `tools/gateway_agent_bridge/perl/gui_loop_v2.pl`.
+- The user-facing GUI loop entrypoint in this repo is the root-level `gui_loop.pl` file.
 
 ### `prepare_gui_submission_package`
 

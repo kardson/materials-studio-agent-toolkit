@@ -204,8 +204,8 @@ If a required module knowledge pack or capability is missing, the intended exten
 Current `gui_loop` preconditions:
 
 - a Materials Studio GUI-resident loop must already be running
+- the file users should run manually inside Materials Studio GUI is `gui_loop.pl` at the repository root
 - the queue root must point at the intended queue directory
-- the current recommended loop implementation is the `gui_loop_v2.pl` script already shipped in `tools/gateway_agent_bridge/perl/`
 
 ### How to give this to another agent
 

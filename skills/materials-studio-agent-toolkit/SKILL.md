@@ -33,7 +33,7 @@ Use this toolkit when you need to generate `MaterialsScript`, package formal GUI
 3. Let the toolkit render an approved template.
 4. Choose the execution surface deliberately:
    - use the default standalone backend for direct `RunMatScript.bat` execution
-   - use `run_materialscript --backend gui_loop` when a Materials Studio GUI-resident loop is already running
+   - use `run_materialscript --backend gui_loop` when a Materials Studio GUI-resident loop is already running from the repository-root `gui_loop.pl`
 5. Execute or package the result.
 
 ## Experimental Path
